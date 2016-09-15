@@ -41,9 +41,9 @@ int main() {
   cout << " errest          " << abs(I(-1,1)-I2(-1,1)) << endl;
 
   double tollerance;
-  cout << " tollerance" << endl;
-  cin >> tollerance;
-  cout << " ASI             " << ASI(-1,1,tollerance) << endl;
+  cout << " tolerance" << endl;
+  cin >> tolerance;
+  cout << " ASI             " << ASI(-1,1,tolerance) << endl;
 
 
   getch();
