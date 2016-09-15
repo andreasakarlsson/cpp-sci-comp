@@ -3,6 +3,16 @@
 
 using namespace std;
 
+// Horner's Scheme - Evaluated a polynom for a value x. Takes vector of polynomial coefficients (polynomCoef), 
+// the degree of the polynomial (pDegree) and an evaluation value (x). 
+double hornerScheme(double * polynomCoef, const int pDegree, double x) {
+  double hSchemeRes = 0.0;
+  for (int i=pDegree; i >=0; i--){
+    hSchemeRes = polynomCoef[i]+x*hSchemeRes;
+  }
+  return hSchemeRes;
+}
+
 // recursive factorial function returns double
 double factorial(int n)
 {
@@ -33,5 +43,14 @@ int main() {
   cout << cosTaylor(N, x) << endl;
   cout << abs(sin(x) - sinTaylor(N, x)) << endl;
   cout << abs(cos(x) - cosTaylor(N, x)) << endl;
+  
+  double poly[3];
+  double y = 2;
+  b[0] = 5;
+  b[1] = 2;
+  b[2] = 3;
+  cout << hornerScheme(poly, 2, y) << endl;
+  
+  
   return 0;
 }
