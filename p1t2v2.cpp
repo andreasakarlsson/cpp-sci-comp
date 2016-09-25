@@ -31,17 +31,17 @@ double ASI(double (*funcp)(double),double a, double b, double tol){
 double ASI2(double (*funcp3)(double),double a, double b, double tol){
 	double Int1 = 0.0;
 	double Int2 = 0.0;
-	double errest = 10;
+	double errest = 100;
 	int n = 1;
 
 	while (errest > 15*tol){  
 		//could set errest calc in the loop condition, 
 		//	but it makes it less readable (?).
 
-		vector<double> lims (2*n);
-		double h = (b-a)/(2*n-1);
-		for(int i = 0; i<2*n; i++) {lims[i] = a+i*h;}
-		for(int j = 0; j<2*n-1; j+=1) {Int1 += I(funcp3, lims[j],lims[j+1]);}
+		vector<double> lims (n+1);
+		double h = (b-a)/(n);
+		for(int i = 0; i<n+1; i++) {lims[i] = a+i*h;}
+		for(int j = 0; j<n; j++) {Int1 += I(funcp3, lims[j],lims[j+1]);}
 
 		// print out to follow loop process.
 		//cout << " n = " << n << " " << lims[2*n-2] << "  " << lims[2*n-1] << " Int1 = " << Int1 << endl;
