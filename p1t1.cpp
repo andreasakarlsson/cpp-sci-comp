@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <conio.h> // loads getch();
 #include <vector>  // vec.clear();
 using namespace std;
 double hornerScheme(vector<double> Poly, int degree, double x);
@@ -85,6 +84,5 @@ int main() {
   testvec[2] = 3;
   cout << "5+2x+3x^2 for x=2     " << hornerScheme(testvec, 2, y) << endl;
 
-  getch();
   return 0;
 }
