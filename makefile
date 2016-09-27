@@ -7,8 +7,5 @@ p1t1: p1t1.cpp
 p1t2: p1t2.cpp
 	$(CC) $(CFLAGS) p1t2.cpp -o p1t2.o && ./p1t2.o
 
-p1t2v2: p1t2v2.cpp
-	$(CC) $(CFLAGS) p1t2v2.cpp -o p1t2v2.o && ./p1t2v2.o
-
 clean:
 	rm *.o
