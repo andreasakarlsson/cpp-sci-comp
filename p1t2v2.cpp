@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include <conio.h> // loads getch();
+// #include <conio.h> // loads getch();
 #include <vector>
 #include <ctime>
 using namespace std;
@@ -19,40 +19,38 @@ double f(double x){
 	return 1+sin(exp(3*x));
 }
 
-double ASI(double (*funcp)(double),double a, double b, double tol){
+double recurisiveASI(double (*funcp)(double),double a, double b, double tol){
 	double Int1 = I(funcp,a,b);
 	double Int2 = I(funcp,a,(a+b)/2)+I(funcp,(a+b)/2,b);
 	double errest = abs(Int1-Int2);
 	if (errest < 15*tol)
 		return Int2;
-	return (ASI(funcp,a,(a+b)/2,tol/2) + ASI(funcp, (a+b)/2,b,tol/2));
+	return (recurisiveASI(funcp, a, (a+b)/2, tol/2) + recurisiveASI(funcp, (a+b) / 2, b, tol / 2));
 }
 
-double ASI2(double (*funcp3)(double),double a, double b, double tol){
-	double Int1 = 0.0;
-	double Int2 = 0.0;
-	double errest = 100;
-	int n = 1;
+double ASI(double (*funcp3)(double),double a, double b, double tol){
+  double Int1 = 0.0;
+  double Int2 = 0.0;
+  int n = 1;
 
-	while (errest > 15*tol){  
-		//could set errest calc in the loop condition, 
-		//	but it makes it less readable (?).
+  while (true){
+    Int1 = 0;
+    vector<double> subInterval (n+1);
+    double h = (b-a)/(n);
 
-		vector<double> lims (n+1);
-		double h = (b-a)/(n);
-		for(int i = 0; i<n+1; i++) {lims[i] = a+i*h;}
-		for(int j = 0; j<n; j++) {Int1 += I(funcp3, lims[j],lims[j+1]);}
+    // calculating sub-intervals and store in a vector
+    for(int i = 0; i < n + 1; i++) {subInterval[i] = a + i * h;}
+    // calculating integral from sum of sub-intervals
+    for(int j = 0; j < n; j++) {Int1 += I(funcp3, subInterval[j], subInterval[j + 1]);}
 
-		// print out to follow loop process.
-		//cout << " n = " << n << " " << lims[2*n-2] << "  " << lims[2*n-1] << " Int1 = " << Int1 << endl;
-			
-		errest = abs(Int1-Int2);
-		n *= 2;  // update number of intervals used
-		Int2 = Int1;
-		Int1 = 0;
-	
-	}
-	return Int2;
+    // checking errest
+    if (abs(Int1 - Int2) < 15 * tol) {
+      break;
+    }
+    n *= 2;  // update number of intervals used
+    Int2 = Int1;
+  }
+  return Int1;
 }
 
 
@@ -64,24 +62,18 @@ int main() {
   fp = f;
 
   double MATLAB = 2.500809110336166;
-  cout << " correct val (MATLAB): I = 2.500809110336166" << endl;
-  cout << " intI    -1 to 1:      I = " << I(fp,-1,1) << endl;
 
-  double tollerance = 0.01;  // 0.001    0.0001
+  vector <double> toleranceVec = {0.01, 0.001, 0.0001};
 
-  cout << " input tollerance value: \n" << " tol = ";
-  cin >> tollerance; 
+  for (auto tolerance: toleranceVec) {
+    cout << "Setting tolerance = " << tolerance << endl;
 
+    cout << "  ASI recurisive \t I = " << recurisiveASI(fp, -1,1,tolerance)
+	 << "\t error = " << abs(recurisiveASI(fp, -1,1,tolerance)-MATLAB) << endl;
+    cout << "  ASI for-loop   \t I = " << ASI(fp, -1,1,tolerance)
+	 << "\t error = " << abs(ASI(fp, -1,1,tolerance)-MATLAB) << endl;
+  }
 
-  cout << " ASI                   I = " << ASI(fp, -1,1,tollerance) << endl;
-  cout << " ASI2                  I = " << ASI2(fp, -1,1,tollerance) << endl;
-  
-
-  cout << " ASI-MATLAB            e = " << abs(ASI(fp, -1,1,tollerance)-MATLAB) << endl;
-  cout << " ASI2-MATLAB           e = " << abs(ASI2(fp, -1,1,tollerance)-MATLAB) << endl;
-
-
-
-  getch();
+  // getch();
   return 0;
 }
