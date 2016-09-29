@@ -53,11 +53,10 @@ will also be more precise.
 \end{align}
 
 \noindent
-We calculated $(-1)^n$ using a modulus operation
-\lstinline$(1 - 2 * (i % 2))$, which saved us a more expensive
-\lstinline$pow()$ call. After first calculating the factorial
-explicitly we were able to implement it as a multiplying factor within
-Horner's scheme.
+We calculated $(-1)^n$ using a modulus operation, which saved us a
+more expensive \lstinline$pow()$ call. After first calculating the
+factorial explicitly we were able to implement it as a multiplying
+factor within Horner's scheme.
 
 \begin{table}[H]
 \begin{tabular}{ l | l | r r r r r r}
@@ -85,7 +84,7 @@ implementations can be seen in table \ref{tab:t1-errors}.
 Based on the results in table \ref{tab:t1-errors} we conclude that for
 small values of $x$ (e.g. one) fewer terms (e.g. ten) in the tailor
 expansion will produce a very precise approximation. However for
-larger values of $x$ (e.g 10) more terms are need.
+larger values of $x$ (e.g. 10) more terms are need.
 
 
 \section*{Task 2 - Adaptive Simpson Integration (ASI)}
@@ -93,13 +92,15 @@ larger values of $x$ (e.g 10) more terms are need.
 
 The source code for task 2 contains two main functions, ASI and recursiveASI. The latter is more intuitive but left here only as a comparison.\\
 
-The ASI funtion takes four parameters. A function pointer, that points to the function giving the integrand, Two doubles, lower and upper integration limit, and finally a double that sets the error tolerance. The Adaptive Simpson Integration is implemented using a while loop that runs as long as the approximate error is bigger than the given tolerance. Inside the while is a for loop that calculates the integral of an integrand $f$, from $a$ to $b$ by splitting the integration interval into $n$ subintervals, calculating the subintervals with the integral approximation, i.e.
+The ASI funtion takes four parameters. A function pointer, that points
+to the function giving the integrand, two doubles one for the
+lower and one  for the upper integration limit, and finally a double that sets the error tolerance. The Adaptive Simpson Integration is implemented using a while-loop that runs as long as the approximate error is bigger than the given tolerance. Inside the while is a for-loop that calculates the integral of an integrand $f$, from $a$ to $b$ by splitting the integration interval into $n$ subintervals, calculating the subintervals with the integral approximation, i.e.
 
 $$ I(a,b) = \frac{b-a}{6} \left (f(a)+4f\left(\frac{a+b}{2}\right) +f(b) \right )$$
 
 and then summing them up. After this the approximate error is calculated and an if-statement is checked to see if the error is small enough and the loop can be broken. If the error is too big the number of intervals, $n$ is doubled and the loop starts anew.\\
 
-The subintervals are calculated by another for loop and stored in a vector: 
+The subintervals are calculated by another for-loop and stored in a vector:
 
 $$ \textrm{intervals} = [ a, a+h, a+2h,a+3h,..., b ], \qquad   h = \frac{b-a}{\textrm{n}}$$
 

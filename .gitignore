@@ -1,3 +1,9 @@
+# LaTeX misc files
+*.out
+*.aux
+*.log
+*.gz
+
 # Compiled Object files
 *.slo
 *.lo
