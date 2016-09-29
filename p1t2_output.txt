@@ -1,0 +1,10 @@
+g++ -g -Wall -std=c++11 p1t2.cpp -o p1t2.o && ./p1t2.o
+Setting tolerance = 0.01
+  ASI recurisive 	 I = 2.50599615724021	 error = 0.00518704690404848
+  ASI for-loop   	 I = 2.49959211110217	 error = 0.00121699923399854
+Setting tolerance = 0.001
+  ASI recurisive 	 I = 2.49985655430236	 error = 0.000952556033802399
+  ASI for-loop   	 I = 2.50076828751155	 error = 4.08228246193687e-05
+Setting tolerance = 0.0001
+  ASI recurisive 	 I = 2.50080966674903	 error = 5.56412861119071e-07
+  ASI for-loop   	 I = 2.50076828751155	 error = 4.08228246193687e-05
