@@ -1,0 +1,90 @@
+\documentclass[paper=a4, fontsize=11pt]{article} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{a4wide}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{listings}
+\lstset{deletestring=[b]{"}}
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[L]{SF3565, Project 1, September 2016}
+\fancyhead[R]{H{\"a}ggmark, Karlsson} % Empty left footer
+\fancyfoot[C]{Program construction in C++ for Scientific Computing} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+
+\title{Program construction in C++ for Scientific Computing}
+
+\author{Ilian H{\"a}ggmark \\ mail \href{mailto:ilianh@kth.se}{ilianh@kth.se}
+  \and Andreas Karlsson \\ mail \href{mailto:andreas.a.karlsson@ki.se}{andreas.a.karlsson@ki.se} }
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\section{Project 1}
+\subsection{Task 1}
+
+The Taylor expansions for sine and cosines can be written as in
+equation~\ref{eq:tsin}, \ref{eq:tcos}.
+
+\begin{align}
+  \text{sin}(x) &= \sum\limits_{n=0}^\infty{(-1)^{n}\frac{x^{2n+1}}{(2n+1)!}} \label{eq:tsin}\\
+  \text{cos}(x) &= \sum\limits_{n=0}^\infty{(-1)^{n}\frac{x^{2n}}{(2n)!}} \label{eq:tcos}
+\end{align}
+
+\noindent
+For an efficient implementation we can calculate the sums using
+Horner's scheme as described in equation \ref{eq:nhorn},
+\ref{eq:horn}. This has the advantage that only \texttt{n} additions
+and \texttt{n} multiplications must be performed, compared with the
+$(\mathtt{n}^{2} + \mathtt{n}) / 2$ multiplications that needs to be performed in the
+original form. The calculation can therefor be carried out faster, and
+will also be more precise.
+
+\begin{align}
+  \text{p}(x) &= c_{0} + c_{1}x + c_{2}x^{2} + c_{3}x^{3} +\dots+c_{n}x^{n} \label{eq:nhorn}\\
+  \text{p}(x) &= c_{0} + x(c_{1} + x(c_{2} + \dots (c_{n-1} + xc_{n}))) \label{eq:horn}
+\end{align}
+
+\noindent
+We calculated $(-1)^n$ using a modulus operation
+\lstinline$(1 - 2 * (i % 2))$, which saved us a more expensive
+\lstinline$pow()$ call. After first calculating the factorial
+explicitly we were able to implement it as a multiplying factor within
+Horner's scheme.
+
+\begin{table}[H]
+\begin{tabular}{ l | l | r r r r r r}
+  sinus & N   & x=-1     & x=1      & x=2         & x=3         & x=5         & x=10        \\
+  \hline
+  sin   & 1   & 0.158529 & 0.158529 & 1.0907      & 2.85888     & 5.95892     & 10.544      \\
+  cos   & 1   & 0.459698 & 0.459698 & 1.41615     & 1.98999     & 0.716338    & 1.83907     \\
+  sin   & 10  & 0        & 0        & 4.08562e-14 & 2.01152e-10 & 8.89053e-06 & 16.2678     \\
+  cos   & 10  & 0        & 0        & 4.2738e-13  & 1.40571e-09 & 3.71704e-05 & 33.5995     \\
+  sin   & 100 & 0        & 0        & 0           & 1.38778e-16 & 1.44329e-15 & 3.8658e-13  \\
+  cos   & 100 & 0        & 0        & 5.55112e-17 & 2.22045e-16 & 3.38618e-15 & 1.66422e-13 \\
+\end{tabular}
+\caption{ Absolute difference between the \lstinline$cmath$
+  implementation and Horner's scheme over a number of, $x$, angles and
+  $N$ terms for the Taylor expansion.  \ref{tab:t1-errors}.}
+\label{tab:t1-errors}
+\end{table}
+
+
+We compared our implementation with the \lstinline$sin$ and
+\lstinline$cos$ functions implemented in the \lstinline$cmath$
+header. The resulting absolute value of the difference between the
+implementations can be seen in table \ref{tab:t1-errors}.
+
+Based on the results in table \ref{tab:t1-errors} we conclude that for
+small values of $x$ (e.g. one) fewer terms (e.g. ten) in the tailor
+expansion will produce a very precise approximation. However for
+larger values of $x$ (e.g 10) more terms are need.
+
+\end{document}
