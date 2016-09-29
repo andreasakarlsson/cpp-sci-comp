@@ -17,7 +17,7 @@
 \fancyfoot[C]{Program construction in C++ for Scientific Computing} % Empty center footer
 \fancyfoot[R]{\thepage} % Page numbering for right footer
 
-\title{Program construction in C++ for Scientific Computing}
+\title{Program construction in C++ for Scientific Computing \\ Teacher: Michael Hanke}
 
 \author{Ilian H{\"a}ggmark \\ mail \href{mailto:ilianh@kth.se}{ilianh@kth.se}
   \and Andreas Karlsson \\ mail \href{mailto:andreas.a.karlsson@ki.se}{andreas.a.karlsson@ki.se} }
@@ -87,14 +87,12 @@ expansion will produce a very precise approximation. However for
 larger values of $x$ (e.g. 10) more terms are need.
 
 
-\section*{Task 2 - Adaptive Simpson Integration (ASI)}
+\section{Task 2 - Adaptive Simpson Integration (ASI)}
 
 
 The source code for task 2 contains two main functions, ASI and recursiveASI. The latter is more intuitive but left here only as a comparison.\\
 
-The ASI funtion takes four parameters. A function pointer, that points
-to the function giving the integrand, two doubles one for the
-lower and one  for the upper integration limit, and finally a double that sets the error tolerance. The Adaptive Simpson Integration is implemented using a while-loop that runs as long as the approximate error is bigger than the given tolerance. Inside the while is a for-loop that calculates the integral of an integrand $f$, from $a$ to $b$ by splitting the integration interval into $n$ subintervals, calculating the subintervals with the integral approximation, i.e.
+The ASI funtion takes four parameters. A function pointer, that points to the function giving the integrand, two doubles one for the lower and one  for the upper integration limit, and finally a double that sets the error tolerance. The Adaptive Simpson Integration is implemented using a while-loop that runs as long as the approximate error is bigger than the given tolerance. Inside the while is a for-loop that calculates the integral of an integrand $f$, from $a$ to $b$ by splitting the integration interval into $n$ subintervals, calculating the subintervals with the integral approximation, i.e.
 
 $$ I(a,b) = \frac{b-a}{6} \left (f(a)+4f\left(\frac{a+b}{2}\right) +f(b) \right )$$
 
