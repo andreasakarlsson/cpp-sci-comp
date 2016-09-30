@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <ctime>
 using namespace std;
 
 double f(double x);
