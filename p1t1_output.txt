@@ -1,77 +1,58 @@
 g++ -g -Wall -std=c++11 p1t1.cpp -o p1t1.o && ./p1t1.o
 Setting N = 1
   Setting x = -1
-    sin using Horner, error & N+1-term: 0.00813765	0.841667
-    cos using Horner, error & N+1-term: 0.0403023	0.541667
+    sin using Horner: error =  0.00813765    N+1-term = 0.841667
+    cos using Horner: error =   0.0403023    N+1-term = 0.541667
   Setting x = 1
-    sin using Horner, error & N+1-term: 0.00813765	0.841667
-    cos using Horner, error & N+1-term: 0.0403023	0.541667
+    sin using Horner: error =  0.00813765    N+1-term = 0.841667
+    cos using Horner: error =   0.0403023    N+1-term = 0.541667
   Setting x = 2
-    sin using Horner, error & N+1-term: 0.242631	0.933333
-    cos using Horner, error & N+1-term: 0.583853	0.333333
+    sin using Horner: error =    0.242631    N+1-term = 0.933333
+    cos using Horner: error =    0.583853    N+1-term = 0.333333
   Setting x = 3
-    sin using Horner, error & N+1-term: 1.64112	0.525
-    cos using Horner, error & N+1-term: 2.51001	0.125
+    sin using Horner: error =     1.64112    N+1-term = 0.525
+    cos using Horner: error =     2.51001    N+1-term = 0.125
   Setting x = 5
-    sin using Horner, error & N+1-term: 14.8744	10.2083
-    cos using Horner, error & N+1-term: 11.7837	14.5417
+    sin using Horner: error =     14.8744    N+1-term = 10.2083
+    cos using Horner: error =     11.7837    N+1-term = 14.5417
   Setting x = 10
-    sin using Horner, error & N+1-term: 156.123	676.667
-    cos using Horner, error & N+1-term: 48.1609	367.667
+    sin using Horner: error =     156.123    N+1-term = 676.667
+    cos using Horner: error =     48.1609    N+1-term = 367.667
 Setting N = 10
   Setting x = -1
-    sin using Horner, error & N+1-term: 0	0.841471
-    cos using Horner, error & N+1-term: 0	0.540302
+    sin using Horner: error =           0    N+1-term = 0.841471
+    cos using Horner: error =           0    N+1-term = 0.540302
   Setting x = 1
-    sin using Horner, error & N+1-term: 0	0.841471
-    cos using Horner, error & N+1-term: 0	0.540302
+    sin using Horner: error =           0    N+1-term = 0.841471
+    cos using Horner: error =           0    N+1-term = 0.540302
   Setting x = 2
-    sin using Horner, error & N+1-term: 2.22045e-16	0.909297
-    cos using Horner, error & N+1-term: 3.83027e-15	0.416147
+    sin using Horner: error = 2.22045e-16    N+1-term = 0.909297
+    cos using Horner: error = 3.83027e-15    N+1-term = 0.416147
   Setting x = 3
-    sin using Horner, error & N+1-term: 3.5876e-12	0.14112
-    cos using Horner, error & N+1-term: 2.74698e-11	0.989992
+    sin using Horner: error =  3.5876e-12    N+1-term = 0.14112
+    cos using Horner: error = 2.74698e-11    N+1-term = 0.989992
   Setting x = 5
-    sin using Horner, error & N+1-term: 4.42572e-07	0.958924
-    cos using Horner, error & N+1-term: 2.02867e-06	0.283662
+    sin using Horner: error = 4.42572e-07    N+1-term = 0.958924
+    cos using Horner: error = 2.02867e-06    N+1-term = 0.283662
   Setting x = 10
-    sin using Horner, error & N+1-term: 3.30511	1.10708
-    cos using Horner, error & N+1-term: 7.50364	2.23223
-Setting N = 20
-  Setting x = -1
-    sin using Horner, error & N+1-term: 0	0.841471
-    cos using Horner, error & N+1-term: 0	0.540302
-  Setting x = 1
-    sin using Horner, error & N+1-term: 0	0.841471
-    cos using Horner, error & N+1-term: 0	0.540302
-  Setting x = 2
-    sin using Horner, error & N+1-term: 0	0.909297
-    cos using Horner, error & N+1-term: 5.55112e-17	0.416147
-  Setting x = 3
-    sin using Horner, error & N+1-term: 1.38778e-16	0.14112
-    cos using Horner, error & N+1-term: 2.22045e-16	0.989992
-  Setting x = 5
-    sin using Horner, error & N+1-term: 1.44329e-15	0.958924
-    cos using Horner, error & N+1-term: 3.38618e-15	0.283662
-  Setting x = 10
-    sin using Horner, error & N+1-term: 1.57634e-10	0.544021
-    cos using Horner, error & N+1-term: 6.75559e-10	0.839072
+    sin using Horner: error =     3.30511    N+1-term = 1.10708
+    cos using Horner: error =     7.50364    N+1-term = 2.23223
 Setting N = 100
   Setting x = -1
-    sin using Horner, error & N+1-term: 0	0.841471
-    cos using Horner, error & N+1-term: 0	0.540302
+    sin using Horner: error =           0    N+1-term = 0.841471
+    cos using Horner: error =           0    N+1-term = 0.540302
   Setting x = 1
-    sin using Horner, error & N+1-term: 0	0.841471
-    cos using Horner, error & N+1-term: 0	0.540302
+    sin using Horner: error =           0    N+1-term = 0.841471
+    cos using Horner: error =           0    N+1-term = 0.540302
   Setting x = 2
-    sin using Horner, error & N+1-term: 0	0.909297
-    cos using Horner, error & N+1-term: 5.55112e-17	0.416147
+    sin using Horner: error =           0    N+1-term = 0.909297
+    cos using Horner: error = 5.55112e-17    N+1-term = 0.416147
   Setting x = 3
-    sin using Horner, error & N+1-term: 1.38778e-16	0.14112
-    cos using Horner, error & N+1-term: 2.22045e-16	0.989992
+    sin using Horner: error = 1.38778e-16    N+1-term = 0.14112
+    cos using Horner: error = 2.22045e-16    N+1-term = 0.989992
   Setting x = 5
-    sin using Horner, error & N+1-term: 1.44329e-15	0.958924
-    cos using Horner, error & N+1-term: 3.38618e-15	0.283662
+    sin using Horner: error = 1.44329e-15    N+1-term = 0.958924
+    cos using Horner: error = 3.38618e-15    N+1-term = 0.283662
   Setting x = 10
-    sin using Horner, error & N+1-term: 3.8658e-13	0.544021
-    cos using Horner, error & N+1-term: 1.66422e-13	0.839072
+    sin using Horner: error =  3.8658e-13    N+1-term = 0.544021
+    cos using Horner: error = 1.66422e-13    N+1-term = 0.839072
