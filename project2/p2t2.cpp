@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 // #include <conio.h> // loads getch();
 #include <vector>
 #include "matrix.h"
@@ -31,12 +32,22 @@ Matrix matrixExp(Matrix M, double tol){
 
 	for(int i = n; i >= 0; i--){
 		result = (I + M*result) / ((i == 0) ? 1 : i);
-		cout << ((i == 0) ? 1 : i) << endl;
-		result.printMatrix();
+		//cout << ((i == 0) ? 1 : i) << endl;
+		//result.printMatrix();
 	}
 	return result;
 
 
+}
+
+// Hard coded for matrix that is 4x4
+void printA(double* a){
+	cout << " Printing matrix from r8mat" << endl;
+	for(int i=0; i<16; i++){
+		cout << " " << a[i];
+		if((i+1)%4==0){ cout << endl;}
+	}
+	cout << "\n";
 }
 
 
@@ -109,6 +120,34 @@ int main() {
 	Matrix C = matrixExp(N,0.1);
 	cout << " matrixExp of N:  \n";
 	C.printMatrix();
+	
+	
+	vector<double> vc = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+	Matrix VC = Matrix(vc);
+	Matrix CC = matrixExp(VC,0.001);
+	cout << " matrixExp of VC:  \n";
+	CC.printMatrix();
+
+
+	double ab[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+	double ba[16] = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+	int ac = 4;
+
+	double* GA = r8mat_expm1(ac,ab);
+	double* GB = r8mat_expm1(ac,ba);
+
+
+
+
+	printA(GA);
+
+	printA(GB);
+
+	double Diff[16];
+	for(int i=0; i<16; i++){
+		Diff[i] = abs(GB[i]-CC.getVal(i));
+	}
+	printA(Diff);
 
 	cout << "\n Press any key to quit...";
 	// getch();
