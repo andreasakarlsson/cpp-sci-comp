@@ -149,6 +149,10 @@ public:
 	int getSize(){
 		return m_size;
 	}
+	
+	double getVal(int i){
+		return Mat[i];
+	}
 
 };
 
