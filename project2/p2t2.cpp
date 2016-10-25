@@ -4,7 +4,8 @@
 // #include <conio.h> // loads getch();
 #include <vector>
 #include "matrix.h"
-// #include "r8lib.h"
+#include "r8lib.h"
+#include "r8mat_expm1.h"
 using namespace std;
 
 
@@ -120,8 +121,8 @@ int main() {
 	Matrix C = matrixExp(N,0.1);
 	cout << " matrixExp of N:  \n";
 	C.printMatrix();
-	
-	
+
+
 	vector<double> vc = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
 	Matrix VC = Matrix(vc);
 	Matrix CC = matrixExp(VC,0.001);
@@ -149,7 +150,7 @@ int main() {
 	}
 	printA(Diff);
 
-	cout << "\n Press any key to quit...";
+	// cout << "\n Press any key to quit...";
 	// getch();
 
 
