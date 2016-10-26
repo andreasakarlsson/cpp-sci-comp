@@ -15,18 +15,17 @@ double myexp(double x, double tol){
 	// => If term n < tol => Error < tol
 	while (true){
 		n += 1;
-		double res = 1;								// to avoid pow 
-		for(int j = n; j >0; j--){ res = x/j*res;}  //(should be better way?)
+		double res = 1;
+		for(int j = n; j >0; j--){ res = x/j*res;}
 			//cout << "n = " << n << " res = "<< res << endl;
 		if (abs(res) < tol){ break; }
 	}
 
 
-	//Calc ulate exponential with Horner's Scheme.
+	//Calculate exponential with Horner's Scheme.
 	double result = 0.0;
 	for(int i = n; i >= 0; i--){
 		result = (1 + x*result) / ((i == 0) ? 1 : i);
-		//cout << "i = " << i << " x = " << x << " result = "<< result << endl;
 	}
 	return result;
 }
@@ -44,7 +43,7 @@ int main() {
     for (auto x: x_vec) {
       cout << "  Setting x = " << x << endl;
       cout << "    myexp and cmath exp, error:     "
-	   << abs(myexp(x,tolerance)-exp(x)) << endl;
+	   << abs(myexp(x,tolerance)-exp(x)) << "\n" << endl;
 
     }
   }
