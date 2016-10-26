@@ -30,9 +30,13 @@
 \section{Project 2}
 \subsection{Task 1 - implement the evaluation of the exponential for real numbers.}
 
+The exponential for real number is based on a simple Taylor expansion and the implementation uses Horner’s scheme to improve the performance.
+To estimate the error a for-loop calculate each term in the Taylor expansion. If term $n$ is smaller than the error the sum of consecutive terms is smaller than the term $n$ and thus the error. Horner’s scheme then uses $n$-terms for the approximation.
+The code is tested with a set of tolerances and exponents $x$. The function works well for low $x$, but when $x$ is over 10 the error exceeds the set tolerance. This is because the $x^n$ get very large and a high $n$ is required to get $n!$ to outgrow $x^n$. Even though the number of terms $n$ can be increase the precision can be lost during the calculation. 
 
 
 \subsection{Task 2 - construct a matrix class.}
+
 
 
 
