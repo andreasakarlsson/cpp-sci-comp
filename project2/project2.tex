@@ -37,7 +37,7 @@ The code is tested with a set of tolerances and exponents $x$. The function work
 
 \subsection{Task 2 - construct a matrix class.}
 
-
+A basic matrix class has been constructed that contains the basic constructors and operator overloading that are required to calculate the matrix exponential with Taylor expansion and Horner's scheme, i.e., the same way as in task 1. The matrix object contains an int with the size of the matrix and a C++ vector object that in turns contains the matrix values. The approach to determine the required number of terms in the Taylor expansion to get an error below a set tolerance is equivalent to that in task 1. Just as for task 1 this works well for matries with small elements but not for large elemetns since the result is so large that the type double cannot contain the values with enough precision.
 
 
 \end{document}
