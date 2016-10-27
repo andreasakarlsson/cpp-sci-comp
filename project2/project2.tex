@@ -8,6 +8,8 @@
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{makecell}
+\usepackage[table]{xcolor}
 \lstset{deletestring=[b]{"}}
 
 \usepackage{fancyhdr} % Custom headers and footers
@@ -30,9 +32,38 @@
 \section{Project 2}
 \subsection{Task 1 - implement the evaluation of the exponential for real numbers.}
 
-The exponential for real number is based on a simple Taylor expansion and the implementation uses Horner’s scheme to improve the performance.
-To estimate the error a for-loop calculate each term in the Taylor expansion. If term $n$ is smaller than the error the sum of consecutive terms is smaller than the term $n$ and thus the error. Horner’s scheme then uses $n$-terms for the approximation.
-The code is tested with a set of tolerances and exponents $x$. The function works well for low $x$, but when $x$ is over 10 the error exceeds the set tolerance. This is because double type cannot store data with high enough precision. A double can store about 15 digits. If the desiered error should be $10^{-10}$ then the largest value that can be stored with this precision is $\sim 10^{5}$.
+The exponential for real number is based on a simple Taylor expansion
+and the implementation uses Horner's scheme to improve the
+performance.  To estimate the error a for-loop calculate each term in
+the Taylor expansion. If term $n$ is smaller than the error the sum of
+consecutive terms is smaller than the term $n$ and thus the
+error. Horner's scheme then uses $n$-terms for the approximation.
+
+\small{
+  \begin{table}[H]
+    \begin{tabular}{ l | l l l l l l}
+      \diaghead{Tolerance}{tol}{x} & -1 & 1 & 3 & 5 & 10 & 50 \\
+      \hline
+      0.01 & 0.00121277  & 0.00161516  & 0.00143384  & 0.00294883 & 0.00175855 & \cellcolor{red!20}3.14573e+06\\
+      0.001 & 2.22983e-05 & 2.78602e-05 & 6.83293e-05 & 0.00020803 & 0.000162384 & \cellcolor{red!20}3.14573e+06\\
+      1e-08 & 1.49839e-10 & 1.72876e-10 & 1.67e-09 & 8.31676e-10 & 9.24047e-10 & \cellcolor{red!20}3.14573e+06\\
+      1e-10 & 7.19536e-13 & 8.15348e-13 & 4.16023e-12 & 4.17799e-12 & 1.45519e-11 & \cellcolor{red!20}3.14573e+06\\
+    \end{tabular}
+    \caption{ Absolute difference between the \lstinline$cmath$
+      implementation and our implementation of an exponential function
+      using Taylor expansion and Horner's scheme for a number of $x$
+      values and tolerances. \ref{tab:p2t1-errors}.}
+    \label{tab:p2t1-errors}
+  \end{table}
+} The code is tested with a set of tolerances and exponents $x$. As
+can be seen in Table~\ref{tab:p2t1-errors} the absolute difference
+with the \texttt{cmath} \texttt{exp} function is within the set
+tolerance for low $x$ values. However for $x$ larger than 10 the error
+exceeds the set tolerance. This is because the type \texttt{double}
+cannot store data with high enough precision. A \texttt{double} can
+store about 15 digits. If the desiered error should be $10^{-10}$ then
+the largest value that can be stored with this precision is
+$\sim 10^{5}$.
 
 
 \subsection{Task 2 - construct a matrix class.}

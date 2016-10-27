@@ -34,7 +34,7 @@ double myexp(double x, double tol){
 int main() {
 
 
-  vector<double> x_vec = {-1, 1, 2, 3, 5, 10};
+  vector<double> x_vec = {-1, 1, 3, 5, 10, 50};
   vector<double> tol_vec = {0.01, 0.001, 1e-8, 1e-10};
 
   // Learning ranges in C++11
