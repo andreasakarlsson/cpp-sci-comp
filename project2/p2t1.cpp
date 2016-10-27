@@ -16,7 +16,7 @@ double myexp(double x, double tol){
 	while (true){
 		n += 1;
 		double res = 1;
-		for(int j = n; j >0; j--){ res = x/j*res;}
+		for(int j = n; j > 0; j--){ res = x / j * res;}
 			//cout << "n = " << n << " res = "<< res << endl;
 		if (abs(res) < tol){ break; }
 	}

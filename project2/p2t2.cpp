@@ -19,8 +19,8 @@ Matrix matrixExp(Matrix M, double tol){
 	while (true){
 		n += 1;
 		result.fillIdentityMatrix();					// to avoid pow
-		for(int j = n; j >0; j--){ result = M*result/j;}  //(should be better way?)
-
+		for(int j = n; j >0; j--){
+		  result = M * result / j;}  //(should be better way?)
 		if ( result.norm() < tol ){ break; }
 	}
 	cout << " number of terms = " << n << "\n" << endl;
@@ -32,7 +32,7 @@ Matrix matrixExp(Matrix M, double tol){
 	I.fillIdentityMatrix();
 
 	for(int i = n; i >= 0; i--){
-		result = (I + M*result) / ((i == 0) ? 1 : i);
+		result = (I + M * result) / ((i == 0) ? 1 : i);
 		//cout << ((i == 0) ? 1 : i) << endl;
 		//result.printMatrix();
 	}
@@ -44,9 +44,9 @@ Matrix matrixExp(Matrix M, double tol){
 // Hard coded for matrix that is 4x4
 void printA(double* a){
 	cout << " Printing matrix from r8mat" << endl;
-	for(int i=0; i<16; i++){
+	for(int i=0; i < 16; i++){
 		cout << " " << a[i];
-		if((i+1)%4==0){ cout << endl;}
+		if((i + 1) % 4 == 0){ cout << endl;}
 	}
 	cout << "\n";
 }
