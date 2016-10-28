@@ -42,6 +42,15 @@ Matrix Matrix::operator+(const Matrix& M){
  	return tempM;
 }
 
+Matrix Matrix::operator-(const Matrix& M){
+	vector<double> res(m_size * m_size);
+	Matrix tempM = Matrix(m_size);
+	for(int i=0; i < m_size * m_size; i++){
+		tempM.Mat[i] = Mat[i] - M.Mat[i];
+	}
+ 	return tempM;
+}
+
 Matrix Matrix::operator/(const double D) {
 	vector<double> res(m_size*m_size);
 	Matrix tempM = Matrix(m_size);
@@ -92,6 +101,17 @@ Matrix Matrix::operator*(const Matrix& M){
 	return tempM;
 }
 
+ostream& operator<<( ostream &output, const Matrix &M ) {
+  output << endl << M.m_size << "x" << M.m_size << " matrix:" << endl;
+  output << "--------------------" << endl;
+  for(int i = 0; i < M.m_size * M.m_size; i++){
+    output << " " << M.Mat[i];
+    if((i + 1) % M.m_size == 0) output << endl;
+  }
+  output << endl;
+  return output;
+}
+
 // ADDITIONAL FUNCTIONS
 
 // Calc. the 1-norm of the matrix. Sum the values in each column and
@@ -106,17 +126,6 @@ double Matrix::norm(){
 		if(sum>max) max = sum;
 	}
 	return max;
-}
-
-// prints the matrix
-void Matrix::printMatrix() const{
-	cout << "\n " << m_size << "x" << m_size << " matrix:\n";
-	cout << "--------------------\n";
-	for(int i = 0; i < m_size * m_size; i++){
-		cout << " " << Mat[i];
-		if((i + 1) % m_size == 0) cout << "\n";
-	}
-	cout << "\n";
 }
 
 // Fill existing matrix with ints between 0 and 10

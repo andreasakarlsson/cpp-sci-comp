@@ -20,10 +20,10 @@ Matrix matrixExp(Matrix M, double tol){
 		n += 1;
 		result.fillIdentityMatrix();					// to avoid pow
 		for(int j = n; j >0; j--){
-		  result = M * result / j;}  //(should be better way?)
+		  result = M * result / j;}
 		if ( result.norm() < tol ){ break; }
 	}
-	cout << " number of terms = " << n << "\n" << endl;
+	cout << "number of terms = " << n << "\n" << endl;
 
 
 	//Calculate exponential with Horner's Scheme.
@@ -33,126 +33,96 @@ Matrix matrixExp(Matrix M, double tol){
 
 	for(int i = n; i >= 0; i--){
 		result = (I + M * result) / ((i == 0) ? 1 : i);
-		//cout << ((i == 0) ? 1 : i) << endl;
-		//result.printMatrix();
 	}
 	return result;
 
 
 }
 
-// Hard coded for matrix that is 4x4
-void printA(double* a){
-	cout << " Printing matrix from r8mat" << endl;
-	for(int i=0; i < 16; i++){
-		cout << " " << a[i];
-		if((i + 1) % 4 == 0){ cout << endl;}
-	}
-	cout << "\n";
+
+vector<double> r8matToVec(double* aa, unsigned aaSize) {
+  vector<double> vec;
+  vec.insert(vec.end(), &aa[0], &aa[aaSize]);
+  return vec;
 }
-
-
 
 int main() {
 
 	Matrix M(4);
 	Matrix N(M);
-	cout << " matrix N (by default containing only ones): \n";
-	N.printMatrix();
+	cout << "matrix N (by default containing only ones): " << N;
 
 	Matrix HE = 3; //uses copy const  works!!
 
 	Matrix G = Matrix(4);
 	G.fillMatrix();
-
-	cout << " G (matrix filled with func fillMatrix): \n";
-	G.printMatrix();
-
+	cout << "G (matrix filled with func fillMatrix): " << G;
 
 	G += N;
-	cout << " new G ( G += N): \n";
-	G.printMatrix();
+	cout << "new G ( G += N): " << G;
 
 	Matrix W = 4;
 
 	W = N+N;
-	cout << " addition of N and N: \n";
-	W.printMatrix();
-	cout << " N after addition: \n";
-	N.printMatrix();
+	cout << "addition of N and N: " << W;
+	cout << "N after addition: " << N;
 
-	cout << "G-norm: " << G.norm() << "\n";
 	// Remove argument in norm => enoguh with G.norm();
 	// But is this less efficient since const is removed???
+	cout << "G-norm: " << G.norm() << endl;
 
 	G *= N;  // This gives G*N
 
-	cout << " multiplication of new G and N ( G *= N): \n";
-	G.printMatrix();
+	cout << "multiplication of new G and N ( G *= N): " << G;
 
 	Matrix U = 4;
 	U = G*N;
-	cout << " multiplication of newnew G and N (U = G*N): \n";
-	U.printMatrix();
-	cout << " N after addition: \n";
-	N.printMatrix();
-	cout << " G after addition: \n";
-	G.printMatrix();
+	cout << "multiplication of newnew G and N (U = G*N): " << U;
+	cout << "N after addition: " << N;
+	cout << "G after addition: " << G;
 
-	cout << " G divided by 2.5: \n";
 	Matrix A = G/2.5;
-	A.printMatrix();
+	cout << "G divided by 2.5: " << A;
 
-	std::vector<double> v1 = {1,2,3,4};
+	vector<double> v1 = {1,2,3,4};
  	Matrix P(v1);
- 	P.printMatrix();
+ 	cout << "Matrix from 1-4 vector:  " << P;
 
- 	cout << " fillMatrix with argument 0 : \n";
  	Matrix V = Matrix(4);
 	V.fillMatrix(0);
-	V.printMatrix();
+	cout << "fillMatrix with argument 0 : " << V;
 
-	cout << " fillIdentityMatrix:  \n";
  	Matrix  I = Matrix(6);
 	I.fillIdentityMatrix();
-	I.printMatrix();
-
+	cout << "fillIdentityMatrix: " << I;
 
 	Matrix C = matrixExp(N,0.1);
-	cout << " matrixExp of N:  \n";
-	C.printMatrix();
-
+	cout << "Results from our matrixExp for matrix filled with ones: " << C;
 
 	vector<double> vc = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
 	Matrix VC = Matrix(vc);
 	Matrix CC = matrixExp(VC,0.001);
-	cout << " matrixExp of VC:  \n";
-	CC.printMatrix();
+	cout << "Results from our matrixExp for VC-matrix (tolerance of 0.001): " << CC;
 
-
-	double ab[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-	double ba[16] = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+	double ones[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+	double vcArray[16] = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
 	int ac = 4;
 
-	double* GA = r8mat_expm1(ac,ab);
-	double* GB = r8mat_expm1(ac,ba);
+	// From the matlab source code:
+	double* ONESE = r8mat_expm1(ac, ones);
+	double* VCE = r8mat_expm1(ac, vcArray);
 
+	// Convert matlab results into a Matrix object for comparison
+	Matrix ONESEM =  Matrix(r8matToVec(ONESE, 16));
+	Matrix VCEM =  Matrix(r8matToVec(VCE, 16));
 
+	cout << "Results from r8mat_expm1 for matrix filled with ones: " << ONESEM;
+	cout << "Results from r8mat_expm1 for VC-matrix:" << VCEM;
 
-
-	printA(GA);
-
-	printA(GB);
-
-	double Diff[16];
-	for(int i=0; i<16; i++){
-		Diff[i] = abs(GB[i]-CC.getVal(i));
-	}
-	printA(Diff);
+	Matrix Mdiff = CC - VCEM;
+	cout << "Difference between r8mat_expm1 and our implementation:" << Mdiff;
 
 	// cout << "\n Press any key to quit...";
 	// getch();
-
-
 	return 0;
 }
