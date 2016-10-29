@@ -31,6 +31,7 @@
 
 \section{Project 2}
 \subsection{Task 1 - implement the evaluation of the exponential for real numbers.}
+\label{subsec:task1}
 
 The exponential for real number is based on a simple Taylor expansion
 and the implementation uses Horner's scheme to improve the
@@ -68,7 +69,17 @@ $\sim 10^{5}$.
 
 \subsection{Task 2 - construct a matrix class.}
 
-A basic matrix class has been constructed that contains the basic constructors and operator overloading that are required to calculate the matrix exponential with Taylor expansion and Horner's scheme, i.e., the same way as in task 1. The matrix object contains an int with the size of the matrix and a C++ vector object that in turns contains the matrix values. The approach to determine the required number of terms in the Taylor expansion to get an error below a set tolerance is equivalent to that in task 1. Just as for task 1 this works well for matries with small elements but not for large elemetns since the result is so large that the type double cannot contain the values with enough precision.
+A basic matrix class has been constructed that contains the basic
+constructors and operator overloading that are required to calculate
+the matrix exponential with Taylor expansion and Horner's scheme,
+i.e., the same way as in Section~\ref{subsec:task1}.
 
-
+The matrix object contains an int with the size of the matrix and a
+C++ vector object that contains the matrix values. The approach to
+determine the required number of terms in the Taylor expansion to get
+an error below a set tolerance is equivalent to that in
+Section~\ref{subsec:task1}. Just as for Section~\ref{subsec:task1}
+this works well for matrices with small elements but not for large
+elements since the result is so large that the type double cannot
+contain the values with enough precision.
 \end{document}
