@@ -1,0 +1,155 @@
+matrix N (by default containing only ones): 
+4x4 matrix:
+--------------------
+ 1 1 1 1
+ 1 1 1 1
+ 1 1 1 1
+ 1 1 1 1
+
+G (matrix filled with func fillMatrix): 
+4x4 matrix:
+--------------------
+ 6 10 6 2
+ 1 4 0 6
+ 3 1 8 7
+ 5 3 7 4
+
+new G ( G += N): 
+4x4 matrix:
+--------------------
+ 7 11 7 3
+ 2 5 1 7
+ 4 2 9 8
+ 6 4 8 5
+
+addition of N and N: 
+4x4 matrix:
+--------------------
+ 2 2 2 2
+ 2 2 2 2
+ 2 2 2 2
+ 2 2 2 2
+
+N after addition: 
+4x4 matrix:
+--------------------
+ 1 1 1 1
+ 1 1 1 1
+ 1 1 1 1
+ 1 1 1 1
+
+G-norm: 25
+multiplication of new G and N ( G *= N): 
+4x4 matrix:
+--------------------
+ 28 28 28 28
+ 15 15 15 15
+ 23 23 23 23
+ 23 23 23 23
+
+multiplication of newnew G and N (U = G*N): 
+4x4 matrix:
+--------------------
+ 112 112 112 112
+ 60 60 60 60
+ 92 92 92 92
+ 92 92 92 92
+
+N after addition: 
+4x4 matrix:
+--------------------
+ 1 1 1 1
+ 1 1 1 1
+ 1 1 1 1
+ 1 1 1 1
+
+G after addition: 
+4x4 matrix:
+--------------------
+ 28 28 28 28
+ 15 15 15 15
+ 23 23 23 23
+ 23 23 23 23
+
+G divided by 2.5: 
+4x4 matrix:
+--------------------
+ 11.2 11.2 11.2 11.2
+ 6 6 6 6
+ 9.2 9.2 9.2 9.2
+ 9.2 9.2 9.2 9.2
+
+Matrix from 1-4 vector:  
+2x2 matrix:
+--------------------
+ 1 2
+ 3 4
+
+fillMatrix with argument 0 : 
+4x4 matrix:
+--------------------
+ 0 0 0 0
+ 0 0 0 0
+ 0 0 0 0
+ 0 0 0 0
+
+fillIdentityMatrix: 
+6x6 matrix:
+--------------------
+ 1 0 0 0 0 0
+ 0 1 0 0 0 0
+ 0 0 1 0 0 0
+ 0 0 0 1 0 0
+ 0 0 0 0 1 0
+ 0 0 0 0 0 1
+
+This is is the VC-matrix. It will be used for the comparison of the exponential functions: 
+4x4 matrix:
+--------------------
+ 1 3 10 45
+ 12 3 5 0
+ 12 1 3 7
+ 19 4 9 6
+
+number of terms = 12
+Results from our matrixExp for matrix filled with ones: 
+4x4 matrix:
+--------------------
+ 14.3958 13.3958 13.3958 13.3958
+ 13.3958 14.3958 13.3958 13.3958
+ 13.3958 13.3958 14.3958 13.3958
+ 13.3958 13.3958 13.3958 14.3958
+
+number of terms = 113
+Results from our matrixExp for VC-matrix (tolerance of 0.001): 
+4x4 matrix:
+--------------------
+ 8.47678e+16 2.18816e+16 5.62372e+16 1.24171e+17
+ 3.30298e+16 8.52616e+15 2.19129e+16 4.83831e+16
+ 4.02549e+16 1.03912e+16 2.67062e+16 5.89667e+16
+ 6.21118e+16 1.60332e+16 4.12066e+16 9.09833e+16
+
+Results from r8mat_expm1 for matrix filled with ones: 
+4x4 matrix:
+--------------------
+ 14.3995 13.3995 13.3995 13.3995
+ 13.3995 14.3995 13.3995 13.3995
+ 13.3995 13.3995 14.3995 13.3995
+ 13.3995 13.3995 13.3995 14.3995
+
+Results from r8mat_expm1 for VC-matrix:
+4x4 matrix:
+--------------------
+ 8.47678e+16 2.18816e+16 5.62372e+16 1.24171e+17
+ 3.30298e+16 8.52616e+15 2.19129e+16 4.83831e+16
+ 4.02549e+16 1.03912e+16 2.67062e+16 5.89667e+16
+ 6.21118e+16 1.60332e+16 4.12066e+16 9.09833e+16
+
+Difference for the VC-matrix between r8mat_expm1 and our implementation:
+4x4 matrix:
+--------------------
+ 672 144 448 784
+ 208 45 140 248
+ 320 70 216 400
+ 424 92 288 512
+

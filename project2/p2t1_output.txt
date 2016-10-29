@@ -1,0 +1,88 @@
+tolerance tol = 0.01
+  Setting x = -1
+    myexp and cmath exp, error:     0.00121277
+
+  Setting x = 1
+    myexp and cmath exp, error:     0.00161516
+
+  Setting x = 2
+    myexp and cmath exp, error:     0.00175451
+
+  Setting x = 3
+    myexp and cmath exp, error:     0.00143384
+
+  Setting x = 5
+    myexp and cmath exp, error:     0.00294883
+
+  Setting x = 10
+    myexp and cmath exp, error:     0.00175855
+
+  Setting x = 50
+    myexp and cmath exp, error:     3.14573e+06
+
+tolerance tol = 0.001
+  Setting x = -1
+    myexp and cmath exp, error:     2.22983e-05
+
+  Setting x = 1
+    myexp and cmath exp, error:     2.78602e-05
+
+  Setting x = 2
+    myexp and cmath exp, error:     6.13899e-05
+
+  Setting x = 3
+    myexp and cmath exp, error:     6.83293e-05
+
+  Setting x = 5
+    myexp and cmath exp, error:     0.00020803
+
+  Setting x = 10
+    myexp and cmath exp, error:     0.000162384
+
+  Setting x = 50
+    myexp and cmath exp, error:     3.14573e+06
+
+tolerance tol = 1e-08
+  Setting x = -1
+    myexp and cmath exp, error:     1.49839e-10
+
+  Setting x = 1
+    myexp and cmath exp, error:     1.72876e-10
+
+  Setting x = 2
+    myexp and cmath exp, error:     4.14234e-10
+
+  Setting x = 3
+    myexp and cmath exp, error:     1.67e-09
+
+  Setting x = 5
+    myexp and cmath exp, error:     8.31676e-10
+
+  Setting x = 10
+    myexp and cmath exp, error:     9.24047e-10
+
+  Setting x = 50
+    myexp and cmath exp, error:     3.14573e+06
+
+tolerance tol = 1e-10
+  Setting x = -1
+    myexp and cmath exp, error:     7.19536e-13
+
+  Setting x = 1
+    myexp and cmath exp, error:     8.15348e-13
+
+  Setting x = 2
+    myexp and cmath exp, error:     4.78551e-12
+
+  Setting x = 3
+    myexp and cmath exp, error:     4.16023e-12
+
+  Setting x = 5
+    myexp and cmath exp, error:     4.17799e-12
+
+  Setting x = 10
+    myexp and cmath exp, error:     1.45519e-11
+
+  Setting x = 50
+    myexp and cmath exp, error:     3.14573e+06
+
