@@ -24,7 +24,6 @@ public:
 	Matrix operator*(const Matrix& M);
 	friend ostream& operator<<(ostream& stream, const Matrix& matrix);
 	double norm();
-	void printMatrix() const;
 	void fillMatrix(int max=10);
 	void fillIdentityMatrix();
 	int getSize();
