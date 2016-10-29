@@ -18,12 +18,12 @@ Matrix matrixExp(Matrix M, double tol){
 	int n = 0;
 	while (true){
 		n += 1;
-		result.fillIdentityMatrix();					// to avoid pow
+		result.fillIdentityMatrix();	// to avoid pow
 		for(int j = n; j >0; j--){
 		  result = M * result / j;}
 		if ( result.norm() < tol ){ break; }
 	}
-	cout << "number of terms = " << n << "\n" << endl;
+	cout << "number of terms = " << n << endl;
 
 
 	//Calculate exponential with Horner's Scheme.
@@ -96,13 +96,18 @@ int main() {
 	I.fillIdentityMatrix();
 	cout << "fillIdentityMatrix: " << I;
 
+	vector<double> vc = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+	Matrix VC = Matrix(vc);
+	cout << "This is is the VC-matrix."
+	  " It will be used for the comparison of the exponential functions: "
+	     << VC;
+
 	Matrix C = matrixExp(N,0.1);
 	cout << "Results from our matrixExp for matrix filled with ones: " << C;
 
-	vector<double> vc = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
-	Matrix VC = Matrix(vc);
 	Matrix CC = matrixExp(VC,0.001);
-	cout << "Results from our matrixExp for VC-matrix (tolerance of 0.001): " << CC;
+	cout << "Results from our matrixExp for VC-matrix (tolerance of 0.001): "
+	     << CC;
 
 	double ones[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 	double vcArray[16] = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
@@ -112,17 +117,18 @@ int main() {
 	double* ONESE = r8mat_expm1(ac, ones);
 	double* VCE = r8mat_expm1(ac, vcArray);
 
-	// Convert matlab results into a Matrix object for comparison
+	// Convert matlab results into our Matrix object for comparison
 	Matrix ONESEM =  Matrix(r8matToVec(ONESE, 16));
 	Matrix VCEM =  Matrix(r8matToVec(VCE, 16));
 
 	cout << "Results from r8mat_expm1 for matrix filled with ones: " << ONESEM;
 	cout << "Results from r8mat_expm1 for VC-matrix:" << VCEM;
 
-	Matrix Mdiff = CC - VCEM;
-	cout << "Difference between r8mat_expm1 and our implementation:" << Mdiff;
+	Matrix MDIFF = CC - VCEM;
+	cout << "Difference for the VC-matrix"
+	  " between r8mat_expm1 and our implementation:"
+	     << MDIFF;
 
-	// cout << "\n Press any key to quit...";
 	// getch();
 	return 0;
 }
