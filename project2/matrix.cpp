@@ -112,7 +112,7 @@ ostream& operator<<( ostream &output, const Matrix &M ) {
   return output;
 }
 
-// ADDITIONAL FUNCTIONS
+// ADDITIONAL METHODS
 
 // Calc. the 1-norm of the matrix. Sum the values in each column and
 // returns the biggest value.
