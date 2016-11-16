@@ -10,14 +10,14 @@ using namespace std;
 
 class Curvebase {
 
-protected: 
+protected:
 	double integrate(double (Curvebase::*funcp)(double), double a, double b, double tol1){
 		double Int1 = 0.0;
 		double Int2 = 0.0;
 		double errest = 10;
 		int n = 1;
 
-		while (errest > 15*tol1){  
+		while (errest > 15*tol1){
 			vector<double> lims (n+1);
 			double h = (b-a)/(n);
 			for(int i = 0; i<n+1; i++) {lims[i] = a+i*h;}
@@ -61,7 +61,7 @@ protected:
 	double (Curvebase::*fpP)(double,double) = &Curvebase::fp;
 	double (Curvebase::*dfpP)(double) = &Curvebase::dfp;
 
-	double tol = 1e-6; // tolerance. Set maybe as argument(?) 
+	double tol = 1e-6; // tolerance. Set maybe as argument(?)
 	//double lb = integrate(l,a_,b_,tol/100);  // length ??
 
 	virtual double xp(double p) = 0;
@@ -83,17 +83,17 @@ protected:
 public:
 	Curvebase(double a = 0.0, double b = 1.0) : a_(a), b_(b){}
 	 // s is the normalized arc length parameter. Interval. [0,1]
-	
+
 	double x(double s){
 		if((s<0)||(s>1)){ cout << "Got invalid s" << endl;}
-		double p = newton(fpP,dfpP,s,0.5*(a_+b_),tol);	
+		double p = newton(fpP,dfpP,s,0.5*(a_+b_),tol);
 		return xp(p);
-	}		
-	double y(double s){		
+	}
+	double y(double s){
 		if((s<0)||(s>1)){ cout << "Got invalid s" << endl;}
-		double p = newton(fpP,dfpP,s,0.5*(a_+b_),tol);	
+		double p = newton(fpP,dfpP,s,0.5*(a_+b_),tol);
 		return yp(p);
-	} 
+	}
 
 	virtual ~Curvebase(){}
 
@@ -111,7 +111,7 @@ public:
 		sides[3] = &s4;
 
 		// check order and other requirements of curves
-		// check consitensy 
+		// check consitensy
 
 
 		// Check that the end of a curve is connected to the start of the next.
@@ -206,7 +206,7 @@ public:
 
 private:
 	Curvebase *sides[4];
-	int m_ = 0; // initialized to zero to enable class to check if 
+	int m_ = 0; // initialized to zero to enable class to check if
 	int n_ = 0; // a grid generation been done.
 
 	double *x_,*y_;
@@ -240,7 +240,7 @@ public:
 	}
 
 	~curvStraight(){}
-	
+
 	void printData(){
 		cout << " Data: " << a_ << " " << b_ << endl;
 	}
@@ -264,12 +264,12 @@ private:
 	}
 
 
-	double lb = integrate(l,a_,b_,tol/100);  // unused. Should be used in abstr. class 
-	// but since it access a virtual function that is not possible. 
+	double lb = integrate(l,a_,b_,tol/100);  // unused. Should be used in abstr. class
+	// but since it access a virtual function that is not possible.
 	int o_; // orientation parameter. Should be improved.
-	double Sdim_; 
+	double Sdim_;
 
-	
+
 };
 
 
@@ -287,24 +287,24 @@ public:
 	}
 
 	~curvExp(){}
-	
+
 private:
 
 	double xp(double p){
 		return p;
 	}
 	double yp(double p){
-		if(p<-3) 
+		if(p<-3)
 			return 0.5/(1+exp(-3*(p+6)));
 		else
-			return 0.5/(1+exp(3*p));		
+			return 0.5/(1+exp(3*p));
 	}
 	double dxp(double p){
 		return 1.0;
 	}
 	double dyp(double p){
 		if(p<-3)
-			return (3/2)*exp(-3*(p+6))/((1+exp(-3*(p+6)))*(1+exp(-3*(p+6)))); 
+			return (3/2)*exp(-3*(p+6))/((1+exp(-3*(p+6)))*(1+exp(-3*(p+6))));
 		else
 			return -(3/2)*exp(3*p)/((1+exp(3*p))*(1+exp(3*p)));
 	}
@@ -342,7 +342,7 @@ int main() {
 	cout << " (" << A.x(0.5) << ", " << A.y(0.5) << ")" << endl;
 	cout << " (" << A.x(0.75) << ", " << A.y(0.75) << ")" << endl;
 	cout << " (" << A.x(1) << ", " << A.y(1) << ")" << endl;
-	   
+
 
 	cout << "\n Curve B:" << endl;
 
@@ -377,10 +377,14 @@ int main() {
 
 	Grid.generate_grid(4,4);
 
-	Grid.save2file();
+	// Grid.save2file();
 
-	// All code needed to read in MATLAB: fid = fopen('outfile.bin','r'); c = fread(fid,'double'); 
+	// All code needed to read in MATLAB: fid = fopen('outfile.bin','r'); c = fread(fid,'double');
 	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
+
+	Domain Grid2(E,B,C,D);
+	Grid2.generate_grid(10,10);
+	Grid2.save2file();
 
 	cout << "\n Press any key to quit..." << endl;
 	// getch();
