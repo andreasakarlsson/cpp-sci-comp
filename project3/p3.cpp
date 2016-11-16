@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-#include <conio.h> // loads getch();
+// #include <conio.h> // loads getch();
 #include <iomanip> // to get setw
 #include <vector>
 //#include <stdexcept>
@@ -141,26 +141,26 @@ public:
 		// xi1 in the sildes is i*h1 and xi2 is j*h2
 
 		for(int i = 0; i <= n; i++){
-			for(int j = 0; j <= n; j++){
+			for(int j = 0; j <= m; j++){
 				cout << "coordinate: i=" << i << ", j=" << j;
-				x_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->x(j*h2) 
+				x_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->x(j*h2)
 					+ phi2(i*h1)*sides[1]->x(j*h2)
-					+ phi1(j*h2)*sides[0]->x(i*h1) 
+					+ phi1(j*h2)*sides[0]->x(i*h1)
 					+ phi2(j*h2)*sides[2]->x(i*h1)
-					- phi1(i*h1)*phi1(j*h2)*sides[0]->x(0) 
+					- phi1(i*h1)*phi1(j*h2)*sides[0]->x(0)
 					- phi2(i*h1)*phi1(j*h2)*sides[1]->x(0)
-					- phi1(i*h1)*phi2(j*h2)*sides[3]->x(0) 
-					- phi2(i*h1)*phi2(j*h2)*sides[2]->x(0);
+					- phi1(i*h1)*phi2(j*h2)*sides[3]->x(1)
+					- phi2(i*h1)*phi2(j*h2)*sides[2]->x(1);
 				cout << "   x-value: " << x_[j+i*(m_+1)];
 
-				y_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->y(j*h2) 
+				y_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->y(j*h2)
 					+ phi2(i*h1)*sides[1]->y(j*h2)
-					+ phi1(j*h2)*sides[0]->y(i*h1) 
+					+ phi1(j*h2)*sides[0]->y(i*h1)
 					+ phi2(j*h2)*sides[2]->y(i*h1)
-					- phi1(i*h1)*phi1(j*h2)*sides[0]->y(0) 
+					- phi1(i*h1)*phi1(j*h2)*sides[0]->y(0)
 					- phi2(i*h1)*phi1(j*h2)*sides[1]->y(0)
-					- phi1(i*h1)*phi2(j*h2)*sides[3]->y(0) 
-					- phi2(i*h1)*phi2(j*h2)*sides[2]->y(0);
+					- phi1(i*h1)*phi2(j*h2)*sides[3]->y(1)
+					- phi2(i*h1)*phi2(j*h2)*sides[2]->y(1);
 				cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
 
 
@@ -322,8 +322,8 @@ int main() {
 
 	curvStraight A(-10,5,0,0); // For initial test use lower boundry that is straight
 	curvStraight B(0,3,1,5);
-	curvStraight C(5,-10,0,3);
-	curvStraight D(3,0,1,-10);
+	curvStraight C(-10,5,0,3);
+	curvStraight D(0,3,1,-10);
 
 	// PRINT OUT TO SHOW THAT THE CURVE OBJECTS GIVE CORRECT VALUES
 
@@ -383,6 +383,6 @@ int main() {
 	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
 
 	cout << "\n Press any key to quit..." << endl;
-	getch();
+	// getch();
 	return 0;
 }
