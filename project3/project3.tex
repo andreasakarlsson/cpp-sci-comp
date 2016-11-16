@@ -1,0 +1,60 @@
+\documentclass[paper=a4, fontsize=12pt]{article} % A4 paper and 11pt font size
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{a4wide}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{makecell}
+\usepackage[table]{xcolor}
+\usepackage[numbered, framed]{mcode}  % To load matlab code
+\lstset{deletestring=[b]{"}}
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[L]{SF3565, Project 3, November 2016}
+\fancyhead[R]{H{\"a}ggmark, Karlsson} % Empty left footer
+\fancyfoot[C]{Program construction in C++ for Scientific Computing} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+
+\title{Program construction in C++ for Scientific Computing \\ Teacher: Michael Hanke}
+
+\author{Ilian H{\"a}ggmark \\ mail \href{mailto:ilianh@kth.se}{ilianh@kth.se}
+  \and Andreas Karlsson \\ mail \href{mailto:andreas.a.karlsson@ki.se}{andreas.a.karlsson@ki.se} }
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\section*{Project 3}
+\subsection*{Task 1 - Abstract Class}
+
+
+
+
+
+\subsection*{Task 2 - Curve Generation}
+
+\subsection*{Task 3 - Domain Class}
+
+
+\subsection*{Task 4 - Data Exportation}
+
+The vectors x\_ and y\_ are concatenated before they are saved with the code given in the task. The produced file can then be read and visualized in \textsc{Matlab} 
+
+\begin{lstlisting}
+fid = fopen('outfile.bin','r'); \% Open file
+c = fread(fid,'double'); \% load file content to vector c
+
+x = c(1:length(c)/2); \% first half of c is x values
+y = c(length(c)/2+1:end); \% second half of c is y values
+
+plot(x,y,'*') \% plot the x,y points 
+ \end{lstlisting}  
+
+
+
+\end{document}
