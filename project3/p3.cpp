@@ -54,7 +54,7 @@ protected:
 // 	//double pmax; // not necessary according to Hanke.
 	double a_;
 	double b_;
-	int rev; // curve orientation. NOT Currently used (determine depending on values of a_ and b_)
+	//int rev; // curve orientation. NOT Currently used (determine depending on values of a_ and b_)
 
 
 	double (Curvebase::*l)(double) = &Curvebase::f; // class member function pointer.
@@ -109,20 +109,39 @@ public:
 		sides[1] = &s2;
 		sides[2] = &s3;
 		sides[3] = &s4;
+		
+		if(~check_consistency(1e-4)){
+			sides[0] = sides[1] = sides[2] = sides[3] = NULL;
+			// what more to do?
+		}
+	}
 
-		// check order and other requirements of curves
-		// check consitensy
 
-
+	bool check_consistency(double epsilon = 1e-3){
+		
+		bool res = true;
+		
 		// Check that the end of a curve is connected to the start of the next.
-		if (sides[0]->x(1) != sides[1]->x(0) || sides[0]->y(1) != sides[1]->y(0))
+		if (abs(sides[0]->x(1) - sides[1]->x(0))>epsilon || abs(sides[0]->y(1) - sides[1]->y(0))>epsilon ){
 			cout << "\n Curve 0 and 1 not connected \n" << endl;
-		if (sides[1]->x(1) != sides[2]->x(0) || sides[1]->y(1) != sides[2]->y(0))
+			res = false;
+		}
+		if ( abs(sides[1]->x(1) - sides[2]->x(1))>epsilon || abs(sides[1]->y(1) - sides[2]->y(1))>epsilon ){
 			cout << "\n Curve 1 and 2  not connected \n" << endl;
-		if (sides[2]->x(1) != sides[3]->x(0) || sides[2]->y(1) != sides[3]->y(0))
+			res = false;
+		}
+		if ( abs(sides[2]->x(0) - sides[3]->x(1))>epsilon || abs(sides[2]->y(0) - sides[3]->y(1))>epsilon ){
 			cout << "\n Curve 2 and 3 not connected \n" << endl;
-		if (sides[3]->x(1) != sides[0]->x(0) || sides[3]->y(1) != sides[0]->y(0))
+			res = false;
+		}
+		if ( abs(sides[3]->x(0) - sides[0]->x(0))>epsilon || abs(sides[3]->y(0) - sides[0]->y(0))>epsilon ){
 			cout << "\n Curve 3 and 0  not connected \n" << endl;
+			res = false
+		}
+		
+		// check order and other requirements of curves
+		
+		return res;
 	}
 
 	void generate_grid(int n, int m){
@@ -133,15 +152,15 @@ public:
 		}
 		n_ = n;
 		m_ = m;
-		x_ = new double[(m+1)*(n+1)];
-		y_ = new double[(m+1)*(n+1)];
-		double h1 = 1.0/n;
-		double h2 = 1.0/m;
+		x_ = new double[(m_+1)*(n_+1)];
+		y_ = new double[(m_+1)*(n_+1)];
+		double h1 = 1.0/n_;
+		double h2 = 1.0/m_;
 
 		// xi1 in the sildes is i*h1 and xi2 is j*h2
 
-		for(int i = 0; i <= n; i++){
-			for(int j = 0; j <= m; j++){
+		for(int i = 0; i <= n_; i++){
+			for(int j = 0; j <= m_; j++){
 				cout << "coordinate: i=" << i << ", j=" << j;
 				x_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->x(j*h2)
 					+ phi2(i*h1)*sides[1]->x(j*h2)
@@ -217,9 +236,6 @@ private:
 	double phi2(double w){
 		return 1.0 - w;
 	}
-
-
-
 };
 
 
@@ -227,13 +243,15 @@ class curvStraight: public Curvebase {
 
 public:
 	curvStraight(double a1, double b1, int ori, double Sdim) : Curvebase() {
-		// if ( a1 < 0 || b1 < a1 ) {
-  //       	cout << "\n Received invlid a or b\n Have set a=0 and b=1" << endl;
-  //       	a1 = 0.0; b1 = 1.0;
-  //   	}
-    	a_ = a1;
-    	b_ = b1;
-    	rev = 1;
+		if ( b1 < a1 ) {
+			cout << "\n changed a & b order" << endl;
+			a_ = b1;
+			b_ = a1;
+		} else {
+    			a_ = a1;
+    			b_ = b1;
+		}
+    	//rev = 1;
     	o_ = ori;
     	Sdim_ = Sdim;
 
@@ -241,9 +259,6 @@ public:
 
 	~curvStraight(){}
 
-	void printData(){
-		cout << " Data: " << a_ << " " << b_ << endl;
-	}
 private:
 
 	double xp(double p){
@@ -272,18 +287,19 @@ private:
 
 };
 
-
 class curvExp: public Curvebase {
 
 public:
 	curvExp(double a1, double b1) : Curvebase() {
-		// if ( a1 < 0 || b1 < a1 ) {
-  //       	cout << "\n Received invlid a or b\n Have set a=0 and b=1" << endl;
-  //       	a1 = 0.0; b1 = 1.0;
-  //   	}
-    	a_ = a1;
-    	b_ = b1;
-    	rev = 1;
+		if ( b1 < a1 ) {
+			cout << "\n changed a & b order" << endl;
+			a_ = b1;
+			b_ = a1;
+		} else {
+    			a_ = a1;
+    			b_ = b1;
+		}
+    	//rev = 1;
 	}
 
 	~curvExp(){}
@@ -309,16 +325,14 @@ private:
 			return -(3/2)*exp(3*p)/((1+exp(3*p))*(1+exp(3*p)));
 	}
 
-	double lb = integrate(l,a_,b_,tol/100);  // length ??
-
-	int o_;
-	double Sdim_;
+	double lb = integrate(l,a_,b_,tol/100);
+	//int o_;
+	//double Sdim_;
 };
 
 int main() {
 
 	curvExp E(-10,5); // correct lower boundry
-
 
 	curvStraight A(-10,5,0,0); // For initial test use lower boundry that is straight
 	curvStraight B(0,3,1,5);
@@ -327,7 +341,7 @@ int main() {
 
 	// PRINT OUT TO SHOW THAT THE CURVE OBJECTS GIVE CORRECT VALUES
 
-	cout << "\n Curve E (currently not used for grid):" << endl;
+	cout << "\n Curve E:" << endl;
 
 	cout << " (" << E.x(0) << ", " << E.y(0) << ")" << endl;
 	cout << " (" << E.x(0.25) << ", " << E.y(0.25) << ")" << endl;
