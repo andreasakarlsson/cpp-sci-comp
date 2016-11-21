@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-// #include <conio.h> // loads getch();
+#include <conio.h> // loads getch();
 #include <iomanip> // to get setw
 #include <vector>
 //#include <stdexcept>
@@ -110,8 +110,9 @@ public:
 		sides[2] = &s3;
 		sides[3] = &s4;
 		
-		if(~check_consistency(1e-4)){
+		if(check_consistency(1e-5) == false){
 			sides[0] = sides[1] = sides[2] = sides[3] = NULL;
+			cout << "Not consistent. All curves set to zero." << endl;
 			// what more to do?
 		}
 	}
@@ -119,29 +120,28 @@ public:
 
 	bool check_consistency(double epsilon = 1e-3){
 		
-		bool res = true;
 		
 		// Check that the end of a curve is connected to the start of the next.
 		if (abs(sides[0]->x(1) - sides[1]->x(0))>epsilon || abs(sides[0]->y(1) - sides[1]->y(0))>epsilon ){
 			cout << "\n Curve 0 and 1 not connected \n" << endl;
-			res = false;
+			return false;
 		}
 		if ( abs(sides[1]->x(1) - sides[2]->x(1))>epsilon || abs(sides[1]->y(1) - sides[2]->y(1))>epsilon ){
 			cout << "\n Curve 1 and 2  not connected \n" << endl;
-			res = false;
+			return false;
 		}
 		if ( abs(sides[2]->x(0) - sides[3]->x(1))>epsilon || abs(sides[2]->y(0) - sides[3]->y(1))>epsilon ){
 			cout << "\n Curve 2 and 3 not connected \n" << endl;
-			res = false;
+			return false;
 		}
 		if ( abs(sides[3]->x(0) - sides[0]->x(0))>epsilon || abs(sides[3]->y(0) - sides[0]->y(0))>epsilon ){
 			cout << "\n Curve 3 and 0  not connected \n" << endl;
-			res = false
+			return false;
 		}
 		
 		// check order and other requirements of curves
 		
-		return res;
+		return true;
 	}
 
 	void generate_grid(int n, int m){
@@ -387,9 +387,9 @@ int main() {
 
 	// Create and save grid (formed by the four straight curves.)
 
-	Domain Grid(A,B,C,D);
+	//Domain Grid(A,B,C,D);
 
-	Grid.generate_grid(4,4);
+	//Grid.generate_grid(4,4);
 
 	// Grid.save2file();
 
@@ -397,10 +397,10 @@ int main() {
 	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
 
 	Domain Grid2(E,B,C,D);
-	Grid2.generate_grid(10,10);
+	Grid2.generate_grid(9,9);
 	Grid2.save2file();
 
 	cout << "\n Press any key to quit..." << endl;
-	// getch();
+	getch();
 	return 0;
 }
