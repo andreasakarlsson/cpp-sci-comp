@@ -4,8 +4,8 @@
 #include <conio.h> // loads getch();
 #include <iomanip> // to get setw
 #include <vector>
-//#include <stdexcept>
 #include <cstdio>
+#include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 using namespace std;
 
 class Curvebase {
@@ -50,19 +50,15 @@ protected:
 	}
 
 
-// 	//double pmin; // not necessary according to Hanke.
-// 	//double pmax; // not necessary according to Hanke.
 	double a_;
 	double b_;
-	//int rev; // curve orientation. NOT Currently used (determine depending on values of a_ and b_)
-
+	double lb; // Length of curve. Initialization is done in instansiated class.
 
 	double (Curvebase::*l)(double) = &Curvebase::f; // class member function pointer.
 	double (Curvebase::*fpP)(double,double) = &Curvebase::fp;
 	double (Curvebase::*dfpP)(double) = &Curvebase::dfp;
 
 	double tol = 1e-6; // tolerance. Set maybe as argument(?)
-	//double lb = integrate(l,a_,b_,tol/100);  // length ??
 
 	virtual double xp(double p) = 0;
 	virtual double yp(double p) = 0;
@@ -73,7 +69,7 @@ protected:
 		return sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p)); // see Inheritance slide nr. 10.
 	}
 	double fp(const double p, const double s){
-		return integrate(l,a_,p,tol/100)-s*integrate(l,a_,b_,tol/100);
+		return integrate(l,a_,p,tol/100)-s*lb; // integrate(l,a_,b_,tol/100);
 	}
 	double dfp(const double p){
 		return f(p); // this is not so nice.
@@ -81,7 +77,7 @@ protected:
 
 
 public:
-	Curvebase(double a = 0.0, double b = 1.0) : a_(a), b_(b){}
+	Curvebase(double a = 0.0, double b = 1.0) : a_(a), b_(b) {}
 	 // s is the normalized arc length parameter. Interval. [0,1]
 
 	double x(double s){
@@ -159,28 +155,41 @@ public:
 
 		// xi1 in the sildes is i*h1 and xi2 is j*h2
 
+		// The eight corner values (x & y). Calculated once before the loop
+		// instead of for every iteration to increase speed. 
+		double s0x0 = sides[0]->x(0);
+		double s1x0 = sides[1]->x(0);
+		double s3x1 = sides[3]->x(1);
+		double s2x1 = sides[2]->x(1);
+
+		double s0y0 = sides[0]->y(0);
+		double s1y0 = sides[1]->y(0);
+		double s3y1 = sides[3]->y(1);
+		double s2y1 = sides[2]->y(1);
+
+
 		for(int i = 0; i <= n_; i++){
 			for(int j = 0; j <= m_; j++){
-				cout << "coordinate: i=" << i << ", j=" << j;
+				//cout << "coordinate: i=" << i << ", j=" << j;
 				x_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->x(j*h2)
 					+ phi2(i*h1)*sides[1]->x(j*h2)
 					+ phi1(j*h2)*sides[0]->x(i*h1)
 					+ phi2(j*h2)*sides[2]->x(i*h1)
-					- phi1(i*h1)*phi1(j*h2)*sides[0]->x(0)
-					- phi2(i*h1)*phi1(j*h2)*sides[1]->x(0)
-					- phi1(i*h1)*phi2(j*h2)*sides[3]->x(1)
-					- phi2(i*h1)*phi2(j*h2)*sides[2]->x(1);
-				cout << "   x-value: " << x_[j+i*(m_+1)];
+					- phi1(i*h1)*phi1(j*h2)*s0x0 // sides[0]->x(0) // 
+					- phi2(i*h1)*phi1(j*h2)*s1x0 // sides[1]->x(0) // 
+					- phi1(i*h1)*phi2(j*h2)*s3x1 // sides[3]->x(1) // 
+					- phi2(i*h1)*phi2(j*h2)*s2x1; // sides[2]->x(1); // 
+				//cout << "   x-value: " << x_[j+i*(m_+1)];
 
 				y_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->y(j*h2)
 					+ phi2(i*h1)*sides[1]->y(j*h2)
 					+ phi1(j*h2)*sides[0]->y(i*h1)
 					+ phi2(j*h2)*sides[2]->y(i*h1)
-					- phi1(i*h1)*phi1(j*h2)*sides[0]->y(0)
-					- phi2(i*h1)*phi1(j*h2)*sides[1]->y(0)
-					- phi1(i*h1)*phi2(j*h2)*sides[3]->y(1)
-					- phi2(i*h1)*phi2(j*h2)*sides[2]->y(1);
-				cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
+					- phi1(i*h1)*phi1(j*h2)*s0y0 // sides[0]->y(0) // 
+					- phi2(i*h1)*phi1(j*h2)*s1y0 // sides[1]->y(0) // 
+					- phi1(i*h1)*phi2(j*h2)*s3y1 // sides[3]->y(1) // 
+					- phi2(i*h1)*phi2(j*h2)*s2y1; // sides[2]->y(1); // 
+				//cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
 
 
 
@@ -251,13 +260,13 @@ public:
     			a_ = a1;
     			b_ = b1;
 		}
-    	//rev = 1;
     	o_ = ori;
     	Sdim_ = Sdim;
-
+    	lb = integrate(l,a_,b_,tol/100);  // total length of cruve.
 	}
 
 	~curvStraight(){}
+
 
 private:
 
@@ -278,9 +287,6 @@ private:
 		else return 1.0;
 	}
 
-
-	double lb = integrate(l,a_,b_,tol/100);  // unused. Should be used in abstr. class
-	// but since it access a virtual function that is not possible.
 	int o_; // orientation parameter. Should be improved.
 	double Sdim_;
 
@@ -299,7 +305,7 @@ public:
     			a_ = a1;
     			b_ = b1;
 		}
-    	//rev = 1;
+    	lb = integrate(l,a_,b_,tol/100); // total length of cruve.
 	}
 
 	~curvExp(){}
@@ -325,9 +331,6 @@ private:
 			return -(3/2)*exp(3*p)/((1+exp(3*p))*(1+exp(3*p)));
 	}
 
-	double lb = integrate(l,a_,b_,tol/100);
-	//int o_;
-	//double Sdim_;
 };
 
 int main() {
@@ -396,9 +399,17 @@ int main() {
 	// All code needed to read in MATLAB: fid = fopen('outfile.bin','r'); c = fread(fid,'double');
 	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
 
+	clock_t t;
+	t = clock();
+
+
 	Domain Grid2(E,B,C,D);
-	Grid2.generate_grid(9,9);
+	Grid2.generate_grid(29,29);
 	Grid2.save2file();
+
+	t = clock() - t;
+	int t2 = (int) t;
+  	printf ("It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
 
 	cout << "\n Press any key to quit..." << endl;
 	getch();
