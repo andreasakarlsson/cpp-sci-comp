@@ -304,10 +304,10 @@ private:
 	double *x_,*y_;
 
 	inline double phi1(double w){
-		return w;
+		return 1.0 - w;
 	}
 	inline double phi2(double w){
-		return 1.0 - w;
+		return w;
 	}
 };
 
