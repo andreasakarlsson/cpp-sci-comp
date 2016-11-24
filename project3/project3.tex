@@ -38,6 +38,8 @@ The function fp in Curvebase is used to calculate $p$ with Newton's methods. Thi
 
 \subsection*{Task 2 - Curve Generation}
 
+The derived curve objects are quite simple since most of the machinery lies in the abstact class. The derived object main hold two important things: the limits of the curve and the destricption in terms of $x$ and $y$.
+
 \subsection*{Task 3 - Domain Class}
 
 The most important part in terms of efficiency for this project is the nested loop that calculated gridspoints inside the generate\_grid function. The expresstion used to calculate the x coordinate (for $y$-term $x$ is simply exchanged for $y$) from the nommalized arc length parameter s is 
@@ -61,15 +63,27 @@ The four last term are corner correction terms. Calculating this expression $(m\
 The vectors x\_ and y\_ are concatenated before they are saved with the code given in the task. The produced file can then be read and visualized in \textsc{Matlab} 
 
 \begin{lstlisting}
-fid = fopen('outfile.bin','r'); \% Open file
-c = fread(fid,'double'); \% load file content to vector c
+fid = fopen('outfile.bin','r'); % Open file
+c = fread(fid,'double');        % load file content to vector c
 
-x = c(1:length(c)/2); \% first half of c is x values
-y = c(length(c)/2+1:end); \% second half of c is y values
+x = c(1:length(c)/2);           % first half of c is x values
+y = c(length(c)/2+1:end);       % second half of c is y values
 
-plot(x,y,'*') \% plot the x,y points 
+plot(x,y,'*')                   % plot the x,y points 
  \end{lstlisting}  
 
+\subsection*{Task 5 - Grid streching}
 
+A short function called stechGrid inside the Domain class is constructed. It loops through all $y$-values and change them slightly with the expression
+
+$$ y_\textrm{strech}(y) = 3 \frac{\exp{1.5\frac{y}{3}}-1}{\exp{1.5}-1}$$
+
+The value 1.5 tell how large the streaching is (changing the sign will determine the orientation). 3 is the maximum value of $y$. The stech value 1.5 is given as arguments to the function.
+
+We also wrote an alternative function, gammaStreachGrid which uses what is often refered to as ``gamma correction''
+
+$$ y_\textrm{strech}(y) =  \left ( \frac{y-mi}{mx-mi}\right )^\gamma \cdot (mx-mi) + mi$$
+
+The input to this function is the gamma values, $\gamma$, the minimum $y$-value $mi$ and the maximum $y$-value $mx$.
 
 \end{document}
