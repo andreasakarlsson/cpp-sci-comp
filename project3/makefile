@@ -10,10 +10,10 @@ run: build
 	./p3
 
 plot: build run
-	./plotgrid.m && xdg-open gridpoints.png
+	./plotgrid.m && xdg-open gridpoints.pdf
 
 output: build
 	./p3 > p3_output.txt
 
 clean:
-	rm -f p3 outfile.bin gridpoints.png
+	rm -f p3 outfile.bin gridpoints.pdf
