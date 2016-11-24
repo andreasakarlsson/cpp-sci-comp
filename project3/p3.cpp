@@ -244,6 +244,21 @@ public:
 		}
 	}
 
+
+	// StrechGrid will chage the y values of the gird. It assumes y goes from zero
+	// to a given max value MAXVAL. The amount the grid will be streched is given by 
+	// the variable STRECH
+	void strechGrid(double maxVal = 3, double strech = 1.5){ 
+		if(n_ != 0){
+			for(int i = 0; i<= n_; i++){
+				for(int j = 0; j<= m_; j++){
+					y_[j+i*(m_+1)] = maxVal*(exp(strech*y_[j+i*(m_+1)]/maxVal)-1)/(exp(strech)-1);
+				}
+			}
+		}
+		return;
+	}
+
 	void save2file(){
 		// Create new array that contains x_ and y_ that
 		// can be written to a binary file.
@@ -438,11 +453,14 @@ int main() {
 	clock_t t;
 	t = clock();
 
-	Grid2.generate_grid(499,499);
+	Grid2.generate_grid(24,24);
 
 	t = clock() - t;
 	int t2 = (int) t;
   	printf ("It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
+
+  	// maximum y values and the amount of strech is given as arg
+  	Grid2.strechGrid(3,1.5); 
 
 	Grid2.save2file();
 
