@@ -6,6 +6,8 @@
 #include <vector>
 #include <cstdio>
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
+
+
 using namespace std;
 
 class Curvebase {
@@ -105,7 +107,7 @@ public:
 		sides[1] = &s2;
 		sides[2] = &s3;
 		sides[3] = &s4;
-		
+
 		if(check_consistency(1e-5) == false){
 			sides[0] = sides[1] = sides[2] = sides[3] = NULL;
 			cout << "Not consistent. All curves set to zero." << endl;
@@ -115,8 +117,8 @@ public:
 
 
 	bool check_consistency(double epsilon = 1e-3){
-		
-		
+
+
 		// Check that the end of a curve is connected to the start of the next.
 		if (abs(sides[0]->x(1) - sides[1]->x(0))>epsilon || abs(sides[0]->y(1) - sides[1]->y(0))>epsilon ){
 			cout << "\n Curve 0 and 1 not connected \n" << endl;
@@ -134,9 +136,9 @@ public:
 			cout << "\n Curve 3 and 0  not connected \n" << endl;
 			return false;
 		}
-		
+
 		// check order and other requirements of curves
-		
+
 		return true;
 	}
 
@@ -156,7 +158,7 @@ public:
 		// xi1 in the sildes is i*h1 and xi2 is j*h2
 
 		// The eight corner values (x & y). Calculated once before the loop
-		// instead of for every iteration to increase speed. 
+		// instead of for every iteration to increase speed.
 		double s0x0 = sides[0]->x(0);
 		double s1x0 = sides[1]->x(0);
 		double s3x1 = sides[3]->x(1);
@@ -207,23 +209,23 @@ public:
 				//cout << "coordinate: i=" << i << ", j=" << j;
 				x_[j+i*(m_+1)] = phi1(i*h1)*x_j_s3[j] // sides[3]->x(j*h2) //
 					+ phi2(i*h1)*x_j_s1[j] // sides[1]->x(j*h2) //
-					+ phi1(j*h2)*x_i_s0[i] // s0xi // sides[0]->x(i*h1) //  
-					+ phi2(j*h2)*x_i_s2[i] // s2xi // sides[2]->x(i*h1) //  
-					- phi1(i*h1)*phi1(j*h2)*s0x0 // sides[0]->x(0) // 
-					- phi2(i*h1)*phi1(j*h2)*s1x0 // sides[1]->x(0) // 
-					- phi1(i*h1)*phi2(j*h2)*s3x1 // sides[3]->x(1) // 
-					- phi2(i*h1)*phi2(j*h2)*s2x1; // sides[2]->x(1); // 
-				//cout << "   x-value: " << x_[j+i*(m_+1)];
+					+ phi1(j*h2)*x_i_s0[i] // s0xi // sides[0]->x(i*h1) //
+					+ phi2(j*h2)*x_i_s2[i] // s2xi // sides[2]->x(i*h1) //
+					- phi1(i*h1)*phi1(j*h2)*s0x0 // sides[0]->x(0) //
+					- phi2(i*h1)*phi1(j*h2)*s1x0 // sides[1]->x(0) //
+					- phi1(i*h1)*phi2(j*h2)*s3x1 // sides[3]->x(1) //
+					- phi2(i*h1)*phi2(j*h2)*s2x1; // sides[2]->x(1); //
+				cout << "   x-value: " << x_[j+i*(m_+1)];
 
 				y_[j+i*(m_+1)] = phi1(i*h1)*y_j_s3[j] // sides[3]->y(j*h2) //
 					+ phi2(i*h1)*y_j_s1[j] // sides[1]->y(j*h2) //
-					+ phi1(j*h2)*y_i_s0[i] // s0yi // sides[0]->y(i*h1) //  
-					+ phi2(j*h2)*y_i_s2[i] // s2yi // sides[2]->y(i*h1) //  
-					- phi1(i*h1)*phi1(j*h2)*s0y0 // sides[0]->y(0) // 
-					- phi2(i*h1)*phi1(j*h2)*s1y0 // sides[1]->y(0) // 
-					- phi1(i*h1)*phi2(j*h2)*s3y1 // sides[3]->y(1) // 
-					- phi2(i*h1)*phi2(j*h2)*s2y1; // sides[2]->y(1); // 
-				//cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
+					+ phi1(j*h2)*y_i_s0[i] // s0yi // sides[0]->y(i*h1) //
+					+ phi2(j*h2)*y_i_s2[i] // s2yi // sides[2]->y(i*h1) //
+					- phi1(i*h1)*phi1(j*h2)*s0y0 // sides[0]->y(0) //
+					- phi2(i*h1)*phi1(j*h2)*s1y0 // sides[1]->y(0) //
+					- phi1(i*h1)*phi2(j*h2)*s3y1 // sides[3]->y(1) //
+					- phi2(i*h1)*phi2(j*h2)*s2y1; // sides[2]->y(1); //
+				cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
 
 
 
@@ -246,9 +248,9 @@ public:
 
 
 	// StrechGrid will chage the y values of the gird. It assumes y goes from zero
-	// to a given max value MAXVAL. The amount the grid will be streched is given by 
+	// to a given max value MAXVAL. The amount the grid will be streched is given by
 	// the variable STRECH
-	void strechGrid(double strech = 1.5){ 
+	void strechGrid(double strech = 1.5){
 		if(n_ != 0){
 			for(int i = 0; i<= n_; i++){
 				for(int j = 0; j<= m_; j++){
@@ -259,9 +261,9 @@ public:
 		return;
 	}
 
-	// Performs strech similar to the function StrechGred. In this function however the 
-	// max and min is not hardcoded but taken as args. 
-	void gammaStrechGrid(double gamma = 1.5, double mi=0, double mx=3){ 
+	// Performs strech similar to the function StrechGred. In this function however the
+	// max and min is not hardcoded but taken as args.
+	void gammaStrechGrid(double gamma = 1.5, double mi=0, double mx=3){
 		if(n_ != 0){
 			for(int i = 0; i<= n_; i++){
 				for(int j = 0; j<= m_; j++){
@@ -473,7 +475,7 @@ int main() {
   	printf ("It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
 
   	// The amount of strech is given as arg
-  	Grid2.strechGrid(-1.5); 
+  	Grid2.strechGrid(-1.5);
 
   	//Grid2.gammaStrechGrid(0.5,0,3);
 
