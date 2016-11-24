@@ -32,7 +32,7 @@
 \section*{Project 3}
 \subsection*{Task 1 - Abstract Class}
 
-
+The function fp in Curvebase is used to calculate $p$ with Newton's methods. This is performed many times and the efficiency should be considered. fp needs the total length of the curve. This can be done by calling integrate. Doing this every time fp is called is however not smart since the length of a curve is constant. We want to create a variable in the Curvebase that contains the length. Curvebase is however an abstract class an does no know anything about the curve. We solve this by declaring a length variable in Curvebase an the initializing the variable in the constructor of the inherited class. Setting length as a variable gives an increase in computational time by a factor $\sim 2.5$\\
 
 
 
@@ -40,6 +40,21 @@
 
 \subsection*{Task 3 - Domain Class}
 
+The most important part in terms of efficiency for this project is the nested loop that calculated gridspoints inside the generate\_grid function. The expresstion used to calculate the x coordinate (for $y$-term $x$ is simply exchanged for $y$) from the nommalized arc length parameter s is 
+
+\begin{align*}
+x[j+i*(m\_+1)]  &= \varphi_1(ih_1)\cdot \textrm{sides}[3]->x(jh_2) \\
+	&+ \varphi_2(ih_1)\cdot \textrm{sides}[1]->x(jh_2) \\
+	&+ \varphi_1(ih_2)\cdot \textrm{sides}[0]->x(ih_1) \\
+	&+ \varphi_2(jh_2)\cdot \textrm{sides}[2]->x(ih_1) \\	
+	&- \varphi_1(ih_1) \varphi_1(jh_2) \cdot  \textrm{sides}[0]->x(0) \\
+	&- \varphi_2(ih_1) \varphi_1(jh_2) \cdot  \textrm{sides}[1]->x(0) \\
+	&- \varphi_1(ih_1) \varphi_2(jh_2) \cdot  \textrm{sides}[3]->x(1) \\
+	&- \varphi_2(ih_1) \varphi_2(jh_2) \cdot  \textrm{sides}[2]->x(1)
+\end{align*}
+
+
+The four last term are corner correction terms. Calculating this expression $(m\_+1)(n\_+1)$ times it very inefficient since the calling calculating the $x$-function of a side is computationally heavy. We can however reduce the number of calls. The $\varphi$-function are very small and can be left as they are (inlining gives little improvement). We should however lift out the parts that contain the call to sides.$x()$. We note that the ``sides'' part of the four corner terms does not depend on $i$ and $j$. It is thus extremely inefficient to calculate them for every loop iterator. We can simply calculate them once before the loop starts. We also note that the first four lines are calculated $(m\_+1)(n\_+1)$ times even though $(m\_+1)$ times or $(n\_+1)$ times would be enough. We do this by calculating the first two lines in one loop and storing them in a vector, then doing the same thing for the 3rd and 4th line. The nested loop that finally puts everything together will thus not contain one call to the heavy $x$-function. This gives totally a decrease in computational time by a factor $\sim 400$.\\
 
 \subsection*{Task 4 - Data Exportation}
 
