@@ -248,11 +248,24 @@ public:
 	// StrechGrid will chage the y values of the gird. It assumes y goes from zero
 	// to a given max value MAXVAL. The amount the grid will be streched is given by 
 	// the variable STRECH
-	void strechGrid(double maxVal = 3, double strech = 1.5){ 
+	void strechGrid(double strech = 1.5){ 
 		if(n_ != 0){
 			for(int i = 0; i<= n_; i++){
 				for(int j = 0; j<= m_; j++){
-					y_[j+i*(m_+1)] = maxVal*(exp(strech*y_[j+i*(m_+1)]/maxVal)-1)/(exp(strech)-1);
+					y_[j+i*(m_+1)] = 3*(exp(strech*y_[j+i*(m_+1)]/3)-1)/(exp(strech)-1);
+				}
+			}
+		}
+		return;
+	}
+
+	// Performs strech similar to the function StrechGred. In this function however the 
+	// max and min is not hardcoded but taken as args. 
+	void gammaStrechGrid(double gamma = 1.5, double mi=0, double mx=3){ 
+		if(n_ != 0){
+			for(int i = 0; i<= n_; i++){
+				for(int j = 0; j<= m_; j++){
+					y_[j+i*(m_+1)] = pow(((y_[j+i*(m_+1)]-mi)/(mx- mi)),gamma)*(mx- mi) + mi;
 				}
 			}
 		}
@@ -459,8 +472,10 @@ int main() {
 	int t2 = (int) t;
   	printf ("It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
 
-  	// maximum y values and the amount of strech is given as arg
-  	Grid2.strechGrid(3,1.5); 
+  	// The amount of strech is given as arg
+  	Grid2.strechGrid(-1.5); 
+
+  	//Grid2.gammaStrechGrid(0.5,0,3);
 
 	Grid2.save2file();
 
