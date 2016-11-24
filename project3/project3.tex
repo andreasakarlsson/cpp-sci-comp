@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{makecell}
+\usepackage{graphicx}
 \usepackage[table]{xcolor}
 \usepackage[numbered, framed]{mcode}  % To load matlab code
 \lstset{deletestring=[b]{"}}
@@ -42,13 +43,13 @@ The derived curve objects are quite simple since most of the machinery lies in t
 
 \subsection*{Task 3 - Domain Class}
 
-The most important part in terms of efficiency for this project is the nested loop that calculated gridspoints inside the generate\_grid function. The expresstion used to calculate the x coordinate (for $y$-term $x$ is simply exchanged for $y$) from the nommalized arc length parameter s is 
+The most important part in terms of efficiency for this project is the nested loop that calculated gridspoints inside the generate\_grid function. The expresstion used to calculate the x coordinate (for $y$-term $x$ is simply exchanged for $y$) from the nommalized arc length parameter s is
 
 \begin{align*}
 x[j+i*(m\_+1)]  &= \varphi_1(ih_1)\cdot \textrm{sides}[3]->x(jh_2) \\
 	&+ \varphi_2(ih_1)\cdot \textrm{sides}[1]->x(jh_2) \\
 	&+ \varphi_1(ih_2)\cdot \textrm{sides}[0]->x(ih_1) \\
-	&+ \varphi_2(jh_2)\cdot \textrm{sides}[2]->x(ih_1) \\	
+	&+ \varphi_2(jh_2)\cdot \textrm{sides}[2]->x(ih_1) \\
 	&- \varphi_1(ih_1) \varphi_1(jh_2) \cdot  \textrm{sides}[0]->x(0) \\
 	&- \varphi_2(ih_1) \varphi_1(jh_2) \cdot  \textrm{sides}[1]->x(0) \\
 	&- \varphi_1(ih_1) \varphi_2(jh_2) \cdot  \textrm{sides}[3]->x(1) \\
@@ -60,17 +61,28 @@ The four last term are corner correction terms. Calculating this expression $(m\
 
 \subsection*{Task 4 - Data Exportation}
 
-The vectors x\_ and y\_ are concatenated before they are saved with the code given in the task. The produced file can then be read and visualized in \textsc{Matlab} 
+The vectors x\_ and y\_ are concatenated before they are saved with
+the code given in the task. The produced file can then be read and
+visualized, as can be seen in Figure \ref{fig:grid}, using
+the \textsc{Matlab} code below.
 
 \begin{lstlisting}
-fid = fopen('outfile.bin','r'); % Open file
-c = fread(fid,'double');        % load file content to vector c
+  fid = fopen('outfile.bin','r'); % Open file
+  c = fread(fid,'double');        % load file content to vector c
 
-x = c(1:length(c)/2);           % first half of c is x values
-y = c(length(c)/2+1:end);       % second half of c is y values
+  x = c(1:length(c)/2);           % first half of c is x values
+  y = c(length(c)/2+1:end);       % second half of c is y values
 
-plot(x,y,'*')                   % plot the x,y points 
- \end{lstlisting}  
+  plot(x,y,'.')                   % plot the x,y points
+  \label{lst:matlab}.
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{gridpoints.pdf}
+  \caption{Grid produced by the \texttt{generate\_grid()} method and plotted with \textsc{Matlab.}\label{fig:grid}}
+\label{fig:grid}
+\end{figure}
 
 \subsection*{Task 5 - Grid streching}
 
