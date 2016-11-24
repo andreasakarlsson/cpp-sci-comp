@@ -168,30 +168,57 @@ public:
 		double s2y1 = sides[2]->y(1);
 
 
+		// Values for the sides are calculated before the loop
+		// this way we cal m+1 cal instead of (m+1)*(m+1) calc.
+		double x_i_s0[(n_+1)];
+		double x_i_s2[(n_+1)];
+		double y_i_s0[(n_+1)];
+		double y_i_s2[(n_+1)];
+
+		for(int i = 0; i<= n_; i++){
+			x_i_s0[i] = sides[0]->x(i*h1);
+			x_i_s2[i] = sides[2]->x(i*h1);
+			y_i_s0[i] = sides[0]->y(i*h1);
+			y_i_s2[i] = sides[2]->y(i*h1);
+		}
+
+		double x_j_s3[(m_+1)];
+		double x_j_s1[(m_+1)];
+		double y_j_s3[(m_+1)];
+		double y_j_s1[(m_+1)];
+
+		for(int j = 0; j<= m_; j++){
+			x_j_s3[j] = sides[3]->x(j*h2);
+			x_j_s1[j] = sides[1]->x(j*h2);
+			y_j_s3[j] = sides[3]->y(j*h2);
+			y_j_s1[j] = sides[1]->y(j*h2);
+		}
+
+
 		for(int i = 0; i <= n_; i++){
 
-			double s0xi = sides[0]->x(i*h1);
-			double s2xi = sides[2]->x(i*h1);
-			double s0yi = sides[0]->y(i*h1);
-			double s2yi = sides[2]->y(i*h1);
+			// double s0xi = sides[0]->x(i*h1);
+			// double s2xi = sides[2]->x(i*h1);
+			// double s0yi = sides[0]->y(i*h1);
+			// double s2yi = sides[2]->y(i*h1);
 
 
 			for(int j = 0; j <= m_; j++){
 				//cout << "coordinate: i=" << i << ", j=" << j;
-				x_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->x(j*h2)
-					+ phi2(i*h1)*sides[1]->x(j*h2)
-					+ phi1(j*h2)*s0xi // sides[0]->x(i*h1)
-					+ phi2(j*h2)*s2xi // sides[2]->x(i*h1)
+				x_[j+i*(m_+1)] = phi1(i*h1)*x_j_s3[j] // sides[3]->x(j*h2) //
+					+ phi2(i*h1)*x_j_s1[j] // sides[1]->x(j*h2) //
+					+ phi1(j*h2)*x_i_s0[i] // s0xi // sides[0]->x(i*h1) //  
+					+ phi2(j*h2)*x_i_s2[i] // s2xi // sides[2]->x(i*h1) //  
 					- phi1(i*h1)*phi1(j*h2)*s0x0 // sides[0]->x(0) // 
 					- phi2(i*h1)*phi1(j*h2)*s1x0 // sides[1]->x(0) // 
 					- phi1(i*h1)*phi2(j*h2)*s3x1 // sides[3]->x(1) // 
 					- phi2(i*h1)*phi2(j*h2)*s2x1; // sides[2]->x(1); // 
 				//cout << "   x-value: " << x_[j+i*(m_+1)];
 
-				y_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->y(j*h2)
-					+ phi2(i*h1)*sides[1]->y(j*h2)
-					+ phi1(j*h2)*s0yi // sides[0]->y(i*h1)
-					+ phi2(j*h2)*s2yi // sides[2]->y(i*h1)
+				y_[j+i*(m_+1)] = phi1(i*h1)*y_j_s3[j] // sides[3]->y(j*h2) //
+					+ phi2(i*h1)*y_j_s1[j] // sides[1]->y(j*h2) //
+					+ phi1(j*h2)*y_i_s0[i] // s0yi // sides[0]->y(i*h1) //  
+					+ phi2(j*h2)*y_i_s2[i] // s2yi // sides[2]->y(i*h1) //  
 					- phi1(i*h1)*phi1(j*h2)*s0y0 // sides[0]->y(0) // 
 					- phi2(i*h1)*phi1(j*h2)*s1y0 // sides[1]->y(0) // 
 					- phi1(i*h1)*phi2(j*h2)*s3y1 // sides[3]->y(1) // 
@@ -246,10 +273,10 @@ private:
 
 	double *x_,*y_;
 
-	double phi1(double w){
+	inline double phi1(double w){
 		return w;
 	}
-	double phi2(double w){
+	inline double phi2(double w){
 		return 1.0 - w;
 	}
 };
@@ -406,18 +433,18 @@ int main() {
 	// All code needed to read in MATLAB: fid = fopen('outfile.bin','r'); c = fread(fid,'double');
 	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
 
+	Domain Grid2(E,B,C,D);
 
 	clock_t t;
 	t = clock();
 
-
-	Domain Grid2(E,B,C,D);
-	Grid2.generate_grid(199,199);
-	Grid2.save2file();
+	Grid2.generate_grid(499,499);
 
 	t = clock() - t;
 	int t2 = (int) t;
   	printf ("It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
+
+	Grid2.save2file();
 
 	cout << "\n Press any key to quit..." << endl;
 	getch();
