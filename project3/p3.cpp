@@ -107,9 +107,8 @@ public:
 		sides[3] = &s4;
 		
 		if(check_consistency(1e-5) == false){
-			sides[0] = sides[1] = sides[2] = sides[3] = NULL;
-			cout << "Not consistent. All curves set to zero." << endl;
-			// what more to do?
+			sides[0] = sides[1] = sides[2] = sides[3] = nullptr;
+			cout << " Not consistent. All curves set to zero.\n" << endl;
 		}
 	}
 
@@ -141,6 +140,10 @@ public:
 	}
 
 	void generate_grid(int n, int m){
+		if(sides[0]==nullptr){
+			cout << " Grid point generation aborted due to nullptr sides.\n" << endl;
+			return;
+		}
 		if((n<1)||(m<1)) {m=20;n=20; cout << "set m and n to 20" << endl;}
 		if(n_ != 0) { // if n_0 non-zero => grid allready exist. Must be deleted.
 			delete [] x_;
@@ -152,8 +155,6 @@ public:
 		y_ = new double[(m_+1)*(n_+1)];
 		double h1 = 1.0/n_;
 		double h2 = 1.0/m_;
-
-		// xi1 in the sildes is i*h1 and xi2 is j*h2
 
 		// The eight corner values (x & y). Calculated once before the loop
 		// instead of for every iteration to increase speed. 
@@ -196,13 +197,6 @@ public:
 
 
 		for(int i = 0; i <= n_; i++){
-
-			// double s0xi = sides[0]->x(i*h1);
-			// double s2xi = sides[2]->x(i*h1);
-			// double s0yi = sides[0]->y(i*h1);
-			// double s2yi = sides[2]->y(i*h1);
-
-
 			for(int j = 0; j <= m_; j++){
 				//cout << "coordinate: i=" << i << ", j=" << j;
 				x_[j+i*(m_+1)] = phi1(i*h1)*x_j_s3[j] // sides[3]->x(j*h2) //
@@ -225,29 +219,13 @@ public:
 					- phi2(i*h1)*phi2(j*h2)*s2y1; // sides[2]->y(1); // 
 				//cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
 
-
-
-				// PRINT OUT for testing code.
-				// double ttest1 = phi1(i*h1)*sides[3]->x(j*h2);
-				// double ttest2 = phi2(i*h1)*sides[1]->x(j*h2);
-				// double ttest3 = phi1(j*h2)*sides[0]->x(i*h1);
-				// double ttest4 = phi2(j*h2)*sides[2]->x(i*h1);
-
-				// double rtest1 = phi1(i*h1)*phi1(j*h2)*sides[0]->x(0);
-				// double rtest2 = phi2(i*h1)*phi1(j*h2)*sides[1]->x(0);
-				// double rtest3 = phi1(i*h1)*phi2(j*h2)*sides[3]->x(0);
-				// double rtest4 = phi2(i*h1)*phi2(j*h2)*sides[2]->x(0);
-
-				// cout << ttest1 << " " << ttest2 << " " << ttest3 << " " << ttest4 << endl;
-				// cout << rtest1 << " " << rtest2 << " " << rtest3 << " " << rtest4 << endl;
 			}
 		}
 	}
 
 
-	// StrechGrid will chage the y values of the gird. It assumes y goes from zero
-	// to a given max value MAXVAL. The amount the grid will be streched is given by 
-	// the variable STRECH
+	// StrechGrid will chage the y values of the gird. It assumes y goes from 0 to 3
+	// The amount the grid will be streched is given by the variable STRECH
 	void strechGrid(double strech = 1.5){ 
 		if(n_ != 0){
 			for(int i = 0; i<= n_; i++){
@@ -259,9 +237,9 @@ public:
 		return;
 	}
 
-	// Performs strech similar to the function StrechGred. In this function however the 
+	// Performs strech similar to the function StrechGrid. In this function however the 
 	// max and min is not hardcoded but taken as args. 
-	void gammaStrechGrid(double gamma = 1.5, double mi=0, double mx=3){ 
+	void gammaStrechGrid(double gamma = 1.5, double mi = 0, double mx = 3){ 
 		if(n_ != 0){
 			for(int i = 0; i<= n_; i++){
 				for(int j = 0; j<= m_; j++){
@@ -272,9 +250,9 @@ public:
 		return;
 	}
 
+	// Saves the x & y-values as a single array in a binary file.
 	void save2file(){
-		// Create new array that contains x_ and y_ that
-		// can be written to a binary file.
+		// Create new array that contains x_ and y_ 
 		int sizeV = (m_+1)*(n_+1);
 		double * result = new double[sizeV + sizeV];
 		copy(x_, x_ + sizeV, result);
@@ -313,7 +291,7 @@ private:
 class curvStraight: public Curvebase {
 
 public:
-	curvStraight(double a1, double b1, int ori, double Sdim) : Curvebase() {
+	curvStraight(double a1, double b1, int orientation, double SecondDim) : Curvebase() {
 		if ( b1 < a1 ) {
 			cout << "\n changed a & b order" << endl;
 			a_ = b1;
@@ -322,8 +300,8 @@ public:
     			a_ = a1;
     			b_ = b1;
 		}
-    	o_ = ori;
-    	Sdim_ = Sdim;
+    	o_ = orientation;
+    	Sdim_ = SecondDim;
     	lb = integrate(l,a_,b_,tol/100);  // total length of cruve.
 	}
 
@@ -470,10 +448,10 @@ int main() {
 
 	t = clock() - t;
 	int t2 = (int) t;
-  	printf ("It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
+  	printf (" It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
 
   	// The amount of strech is given as arg
-  	Grid2.strechGrid(-1.5); 
+  	//Grid2.strechGrid(-1.5); 
 
   	//Grid2.gammaStrechGrid(0.5,0,3);
 
