@@ -1,19 +1,19 @@
-CC=g++
-CFLAGS=-g -Wall -std=c++11
+CPP=g++
+CPPFLAGS=-g -Wall -std=c++11
 
-all: build run plot
+all: plot
 
 build:
-	$(CC) $(CFLAGS) p3.cpp -o p3.o
+	$(CPP) $(CPPFLAGS) p3.cpp -o p3
 
-run:
-	./p3.o
+run: build
+	./p3
 
-plot:
+plot: build run
 	./plotgrid.m && xdg-open gridpoints.png
 
 output: build
-	./p3.o > p3_output.txt
+	./p3 > p3_output.txt
 
 clean:
-	rm *.o outfile.bin gridpoints.png
+	rm -f p3 outfile.bin gridpoints.png
