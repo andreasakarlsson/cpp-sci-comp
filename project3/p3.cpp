@@ -169,12 +169,19 @@ public:
 
 
 		for(int i = 0; i <= n_; i++){
+
+			double s0xi = sides[0]->x(i*h1);
+			double s2xi = sides[2]->x(i*h1);
+			double s0yi = sides[0]->y(i*h1);
+			double s2yi = sides[2]->y(i*h1);
+
+
 			for(int j = 0; j <= m_; j++){
 				//cout << "coordinate: i=" << i << ", j=" << j;
 				x_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->x(j*h2)
 					+ phi2(i*h1)*sides[1]->x(j*h2)
-					+ phi1(j*h2)*sides[0]->x(i*h1)
-					+ phi2(j*h2)*sides[2]->x(i*h1)
+					+ phi1(j*h2)*s0xi // sides[0]->x(i*h1)
+					+ phi2(j*h2)*s2xi // sides[2]->x(i*h1)
 					- phi1(i*h1)*phi1(j*h2)*s0x0 // sides[0]->x(0) // 
 					- phi2(i*h1)*phi1(j*h2)*s1x0 // sides[1]->x(0) // 
 					- phi1(i*h1)*phi2(j*h2)*s3x1 // sides[3]->x(1) // 
@@ -183,8 +190,8 @@ public:
 
 				y_[j+i*(m_+1)] = phi1(i*h1)*sides[3]->y(j*h2)
 					+ phi2(i*h1)*sides[1]->y(j*h2)
-					+ phi1(j*h2)*sides[0]->y(i*h1)
-					+ phi2(j*h2)*sides[2]->y(i*h1)
+					+ phi1(j*h2)*s0yi // sides[0]->y(i*h1)
+					+ phi2(j*h2)*s2yi // sides[2]->y(i*h1)
 					- phi1(i*h1)*phi1(j*h2)*s0y0 // sides[0]->y(0) // 
 					- phi2(i*h1)*phi1(j*h2)*s1y0 // sides[1]->y(0) // 
 					- phi1(i*h1)*phi2(j*h2)*s3y1 // sides[3]->y(1) // 
@@ -390,21 +397,22 @@ int main() {
 
 	// Create and save grid (formed by the four straight curves.)
 
-	//Domain Grid(A,B,C,D);
+	// Domain Grid(A,B,C,D);
 
-	//Grid.generate_grid(4,4);
+	// Grid.generate_grid(29,29);
 
 	// Grid.save2file();
 
 	// All code needed to read in MATLAB: fid = fopen('outfile.bin','r'); c = fread(fid,'double');
 	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
 
+
 	clock_t t;
 	t = clock();
 
 
 	Domain Grid2(E,B,C,D);
-	Grid2.generate_grid(29,29);
+	Grid2.generate_grid(199,199);
 	Grid2.save2file();
 
 	t = clock() - t;
