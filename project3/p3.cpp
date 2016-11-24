@@ -1,11 +1,14 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-#include <conio.h> // loads getch();
 #include <iomanip> // to get setw
 #include <vector>
 #include <cstdio>
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
+
+#ifdef _WIN32
+#include <conio.h> // loads getch();
+#endif
 
 
 using namespace std;
@@ -458,7 +461,9 @@ int main() {
 
 	Grid2.save2file();
 
+#ifdef _WIN32
 	cout << "\n Press any key to quit..." << endl;
 	getch();
+#endif
 	return 0;
 }
