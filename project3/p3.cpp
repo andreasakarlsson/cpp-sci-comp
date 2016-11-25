@@ -255,7 +255,7 @@ public:
 	}
 
 	// Saves the x & y-values as a single array in a binary file.
-	void save2file(){
+	void save2file(const char* fname = "outfile.bin"){
 		// Create new array that contains x_ and y_
 		int sizeV = (m_+1)*(n_+1);
 		double * result = new double[sizeV + sizeV];
@@ -263,7 +263,7 @@ public:
 		copy(y_, y_ + sizeV, result + sizeV);
 
 		FILE *fil;
-		fil = fopen("outfile.bin","wb");
+		fil = fopen(fname,"wb");
 		fwrite(result,sizeof(double),2*sizeV,fil);
 		fclose(fil);
 	}
@@ -432,34 +432,33 @@ int main() {
 	cout << " (" << D.x(1) << ", " << D.y(1) << ")" << "\n" << endl;
 
 
-	// Create and save grid (formed by the four straight curves.)
 
-	// Domain Grid(A,B,C,D);
+	// Create and save grid to (formed by the four straight curves.)
 
-	// Grid.generate_grid(29,29);
+	Domain Grid(A,B,C,D);
 
-	// Grid.save2file();
+	Grid.generate_grid(50,20);
 
-	// All code needed to read in MATLAB: fid = fopen('outfile.bin','r'); c = fread(fid,'double');
-	// x = c(1:length(c)/2);  y = c(length(c)/2+1:end); plot(x,y,'*')
+	Grid.save2file("task3.bin");
+
 
 	Domain Grid2(E,B,C,D);
 
 	clock_t t;
 	t = clock();
 
-	Grid2.generate_grid(24,24);
+	Grid2.generate_grid(50,20);
 
 	t = clock() - t;
 	int t2 = (int) t;
   	printf (" It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
 
+	Grid2.save2file("task4.bin");
+
   	// The amount of strech is given as arg
-  	//Grid2.strechGrid(-1.5);
-
-  	//Grid2.gammaStrechGrid(0.5,0,3);
-
-	Grid2.save2file();
+	//Grid2.strechGrid(-1.5);
+  	Grid.gammaStrechGrid(0.5,0,3);
+	Grid.save2file("task5.bin");
 
 #ifdef _WIN32
 	cout << "\n Press any key to quit..." << endl;

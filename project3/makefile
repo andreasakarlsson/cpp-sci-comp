@@ -10,10 +10,12 @@ run: build
 	./p3
 
 plot: build run
-	./plotgrid.m && xdg-open gridpoints.pdf
+	echo 'task3' | ./plotgrid.m && xdg-open task3.pdf;
+	echo 'task4' | ./plotgrid.m && xdg-open task4.pdf;
+	echo 'task5' | ./plotgrid.m && xdg-open task5.pdf;
 
 output: build
 	./p3 > p3_output.txt
 
 clean:
-	rm -f p3 outfile.bin gridpoints.pdf
+	rm -f p3 *.bin task{3..5}.pdf
