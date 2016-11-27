@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-#include <iomanip> // to get setw
 #include <vector>
 #include <cstdio>
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
@@ -36,22 +35,21 @@ protected:
 	}
 	double I(double (Curvebase::*funcp)(double),double a, double b){
 		return (b-a)/6*((this->*funcp)(a)+4*(this->*funcp)((a+b)/2)+(this->*funcp)(b));
-		//return (b-a)/6*(funcp(a)+4*funcp((a+b)/2)+funcp(b));
 	}
 
 	double newton(double (Curvebase::*fp1)(double,double), double (Curvebase::*dfp1)(double), double s, double initG, double tol1){
-	double x1;
-	double x = initG;
-	int it = 0; int maxit = 1000;
-	double err = tol1 + 1;
-	while( err > tol1 && it < maxit){
-		x1 = x-(this->*fp1)(x,s)/(this->*dfp1)(x);
-		err = abs(x1-x);
-		x = x1;
-		it++;
-	}
-	if(err >= tol1) {cout << s  << initG << " - No convergence Newton. Res = " << x << x1 << endl;}
-	return x;
+		double x1;
+		double x = initG;
+		int it = 0; int maxit = 1000;
+		double err = tol1 + 1;
+		while( err > tol1 && it < maxit){
+			x1 = x-(this->*fp1)(x,s)/(this->*dfp1)(x);
+			err = abs(x1-x);
+			x = x1;
+			it++;
+		}
+		if(err >= tol1) {cout << s  << initG << " - No convergence Newton. Res = " << x << x1 << endl;}
+		return x;
 	}
 
 
@@ -61,9 +59,8 @@ protected:
 
 	double (Curvebase::*l)(double) = &Curvebase::f; // class member function pointer.
 	double (Curvebase::*fpP)(double,double) = &Curvebase::fp;
-	double (Curvebase::*dfpP)(double) = &Curvebase::dfp;
 
-	double tol = 1e-6; // tolerance. Set maybe as argument(?)
+	double tol = 1e-6; // tolerance.
 
 	virtual double xp(double p) = 0;
 	virtual double yp(double p) = 0;
@@ -71,35 +68,32 @@ protected:
 	virtual double dyp(double p) = 0;
 
 	double f(double p){
-		return sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p)); // see Inheritance slide nr. 10.
+		return sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p)); // The Integrand of the arc length integral.
 	}
 	double fp(const double p, const double s){
-		return integrate(l,a_,p,tol/100)-s*lb; // integrate(l,a_,b_,tol/100);
-	}
-	double dfp(const double p){
-		return f(p); // this is not so nice.
+		return integrate(l,a_,p,tol/100)-s*lb; // Equation to determine p from s.
 	}
 
 
 public:
 	Curvebase(double a = 0.0, double b = 1.0) : a_(a), b_(b) {}
-	 // s is the normalized arc length parameter. Interval. [0,1]
 
 	double x(double s){
 		if((s<0)||(s>1)){ cout << "Got invalid s" << endl;}
-		double p = newton(fpP,dfpP,s,0.5*(a_+b_),tol);
+		double p = newton(fpP,l,s,0.5*(a_+b_),tol);
 		return xp(p);
 	}
 	double y(double s){
 		if((s<0)||(s>1)){ cout << "Got invalid s" << endl;}
-		double p = newton(fpP,dfpP,s,0.5*(a_+b_),tol);
+		double ss = (exp(1.5*s)-1)/(exp(1.5)-1);
+		//cout << "s = " << s << " ss = " << ss << endl;
+		double p = newton(fpP,l,ss,0.5*(a_+b_),tol);
 		return yp(p);
 	}
 
 	virtual ~Curvebase(){}
 
 };
-
 
 
 class Domain {
@@ -138,8 +132,6 @@ public:
 			cout << "\n Curve 3 and 0  not connected \n" << endl;
 			return false;
 		}
-
-		// check order and other requirements of curves
 
 		return true;
 	}
@@ -331,7 +323,7 @@ private:
 		else return 1.0;
 	}
 
-	int o_; // orientation parameter. Should be improved.
+	int o_;
 	double Sdim_;
 
 
@@ -379,7 +371,7 @@ private:
 
 int main() {
 
-	curvExp E(-10,5); // correct lower boundry
+	curvExp E(-10,5); // lower boundry
 
 	curvStraight A(-10,5,0,0); // For initial test use lower boundry that is straight
 	curvStraight B(0,3,1,5);
@@ -431,8 +423,6 @@ int main() {
 	cout << " (" << D.x(0.75) << ", " << D.y(0.75) << ")" << endl;
 	cout << " (" << D.x(1) << ", " << D.y(1) << ")" << "\n" << endl;
 
-
-
 	// Create and save grid to (formed by the four straight curves.)
 
 	Domain Grid(A,B,C,D);
@@ -441,13 +431,14 @@ int main() {
 
 	Grid.save2file("task3.bin");
 
+	// Create and save grid. The computational time for generation of points measured. 
 
 	Domain Grid2(E,B,C,D);
 
 	clock_t t;
 	t = clock();
 
-	Grid2.generate_grid(50,20);
+	Grid2.generate_grid(49,19);
 
 	t = clock() - t;
 	int t2 = (int) t;
@@ -455,10 +446,12 @@ int main() {
 
 	Grid2.save2file("task4.bin");
 
+
   	// The amount of strech is given as arg
-	//Grid2.strechGrid(-1.5);
-  	Grid.gammaStrechGrid(0.5,0,3);
-	Grid.save2file("task5.bin");
+	//Grid2.strechGrid(1.5);
+  	//Grid.gammaStrechGrid(0.5,0,3);
+	//Grid2.save2file("task5.bin");
+
 
 #ifdef _WIN32
 	cout << "\n Press any key to quit..." << endl;
