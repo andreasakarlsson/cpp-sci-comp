@@ -41,20 +41,6 @@
 	}
 
 
-	// double a_;
-	// double b_;
-	// double lb; // Length of curve. Initialization is done in instansiated class.
-
-	// l = &Curvebase::f; // class member function pointer.
-	// fpP = &Curvebase::fp;
-
-	// tol = 1e-6; // tolerance.
-
-	// virtual double xp(double p) = 0;
-	// virtual double yp(double p) = 0;
-	// virtual double dxp(double p) = 0;
-	// virtual double dyp(double p) = 0;
-
 	double Curvebase::f(double p){
 		return sqrt(dxp(p)*dxp(p)+dyp(p)*dyp(p)); // The Integrand of the arc length integral.
 	}

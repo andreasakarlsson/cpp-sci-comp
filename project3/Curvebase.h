@@ -27,9 +27,9 @@ class Curvebase{
   double b_;
   double lb; // Length of curve. Initialization is done in instansiated class.
 
-  double (Curvebase::*l)(double)=0; // class member function pointer.
-  double (Curvebase::fpP)(double,double)=0;
-  double tol = 1e-6; // tolerance.
+  double (Curvebase::*l)(double)=&Curvebase::f; // class member function pointer.
+  double (Curvebase::*fpP)(double,double)=&Curvebase::fp;
+  double const tol = 1e-6; // tolerance.
 
 };
 
