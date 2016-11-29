@@ -67,7 +67,7 @@ x[j+i*(m\_+1)]  &= \varphi_1(ih_1)\cdot \textrm{sides}[3]->x(jh_2) \\
 	&- \varphi_2(ih_1) \varphi_2(jh_2) \cdot  \textrm{sides}[2]->x(1)
 \end{align*}
 
-The four last term are corner correction terms. Calculating this expression $(m\_+1)(n\_+1)$ times it very inefficient since the calling calculating the $x$-function of a side is computationally heavy. We can however reduce the number of calls. The $\varphi$-function are very small and can be left as they are (inlining gives little improvement). We should however lift out the parts that contain the call to sides.$x()$. We note that the ``sides'' part of the four corner terms does not depend on $i$ and $j$. It is thus extremely inefficient to calculate them for every loop iterator. We can simply calculate them once before the loop starts. We also note that the first four lines are calculated $(m\_+1)(n\_+1)$ times even though $(m\_+1)$ times or $(n\_+1)$ times would be enough. We do this by calculating the first two lines in one loop and storing them in a vector, then doing the same thing for the 3rd and 4th line. The nested loop that finally puts everything together will thus not contain one call to the heavy $x$-function. This gives totally a decrease in computational time by a factor $\sim 400$. Generating one milion grid points took e.g. $2.5$ seconds on an average Intel dual core processor.  \\
+The four last term are corner correction terms. Calculating this expression $(m\_+1)(n\_+1)$ times it very inefficient since the calling calculating the $x$-function of a side is computationally heavy. We can however reduce the number of calls. The $\varphi$-function are very small and can be left as they are (inlining gives little improvement). We should however lift out the parts that contain the call to sides.$x()$. We note that the ``sides'' part of the four corner terms does not depend on $i$ and $j$. It is thus extremely inefficient to calculate them for every loop iterator. We can simply calculate them once before the loop starts. We also note that the first four lines are calculated $(m\_+1)(n\_+1)$ times even though $(m\_+1)$ times or $(n\_+1)$ times would be enough. We do this by calculating the first two lines in one loop and storing them in a vector, then doing the same thing for the 3rd and 4th line. The nested loop that finally puts everything together will thus not contain one call to the heavy $x$-function. This gives totally a decrease in computational time by a factor $\sim 2n_$. Generating one milion grid points took e.g. $2.5$ seconds on an average Intel dual core processor.  \\
 
 \subsection*{Task 4 - Data Exportation}
 
@@ -99,19 +99,9 @@ the \textsc{Matlab} code below.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{task5.pdf}
-  \caption{A stretched grid produced by the \texttt{gammaStretchGrid()} method and plotted with \textsc{Matlab.}\label{fig:stretched}}
+  \caption{A stretched grid plotted with \textsc{Matlab.}\label{fig:stretched}}
 \end{figure}
 
-A short function called stretchGrid inside the Domain class is constructed. It loops through all $y$-values and change them slightly with the expression
-
-$$ y_\textrm{stretch}(y) = 3 \frac{\exp{1.5\frac{y}{3}}-1}{\exp{1.5}-1}$$
-
-The value 1.5 tell how large the stretching is (the sign will determine if the stretching occurs for low or high values). 3 is the maximum value of $y$. The stretch value 1.5 is given as arguments to the function.
-
-We also wrote an alternative function, \texttt{gammaStretchGrid()} which uses what is often refered to as ``gamma correction''
-
-$$ y_\textrm{stretch}(y) =  \left ( \frac{y-mi}{mx-mi}\right )^\gamma \cdot (mx-mi) + mi$$
-
-The input to this function is the gamma values, $\gamma$, the minimum $y$-value $mi$ and the maximum $y$-value $mx$.
+We added an (optional) boolean argumnet in the generate_grid function. When true the expression given in task 5 was appiled to $j*h_2$ in the calls to the function \texttt{y} in \texttt{Curvebase}. This stretch the grid in the vertical direction, while still not changing the boundries (as expected).  
 
 \end{document}
