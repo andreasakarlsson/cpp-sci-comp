@@ -1,8 +1,6 @@
 #ifndef CURVEBASE_H
 #define CURVEBASE_H
 
-using namespace std;
-
 class Curvebase{
  public:
   Curvebase();
