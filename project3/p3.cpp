@@ -136,7 +136,7 @@ public:
 		return true;
 	}
 
-	void generate_grid(int n, int m){
+  void generate_grid(int n, int m, bool stretch = false){
 		if(sides[0]==nullptr){
 			cout << " Grid point generation aborted due to nullptr sides.\n" << endl;
 			return;
@@ -153,8 +153,10 @@ public:
 		double h1 = 1.0/n_;
 		double h2 = 1.0/m_;
 
-		// The eight corner values (x & y). Calculated once before the loop
-		// instead of for every iteration to increase speed.
+
+		// The eight corner values (x & y). Calculated once
+		// before the loop instead of for every iteration to
+		// increase speed.
 		double s0x0 = sides[0]->x(0);
 		double s1x0 = sides[1]->x(0);
 		double s3x1 = sides[3]->x(1);
@@ -167,7 +169,8 @@ public:
 
 
 		// Values for the sides are calculated before the loop
-		// this way we cal m+1 cal instead of (m+1)*(m+1) calc.
+		// this way we do m+1 calculations instead of
+		// (m+1)*(m+1).
 		double x_i_s0[(n_+1)];
 		double x_i_s2[(n_+1)];
 		double y_i_s0[(n_+1)];
@@ -186,64 +189,38 @@ public:
 		double y_j_s1[(m_+1)];
 
 		for(int j = 0; j<= m_; j++){
-			x_j_s3[j] = sides[3]->x(j*h2);
-			x_j_s1[j] = sides[1]->x(j*h2);
-			y_j_s3[j] = sides[3]->y(j*h2);
-			y_j_s1[j] = sides[1]->y(j*h2);
+		  double ss; // ss is a stretched version of j*h2
+		  if (stretch) ss = (exp(1.5*j*h2)-1)/(exp(1.5)-1); else ss = j*h2;
+		  x_j_s3[j] = sides[3]->x(ss);
+		  x_j_s1[j] = sides[1]->x(ss);
+		  y_j_s3[j] = sides[3]->y(ss);
+		  y_j_s1[j] = sides[1]->y(ss);
 		}
 
 
 		for(int i = 0; i <= n_; i++){
 			for(int j = 0; j <= m_; j++){
-				//cout << "coordinate: i=" << i << ", j=" << j;
-				x_[j+i*(m_+1)] = phi1(i*h1)*x_j_s3[j] // sides[3]->x(j*h2) //
-					+ phi2(i*h1)*x_j_s1[j] // sides[1]->x(j*h2) //
-					+ phi1(j*h2)*x_i_s0[i] // s0xi // sides[0]->x(i*h1) //
-					+ phi2(j*h2)*x_i_s2[i] // s2xi // sides[2]->x(i*h1) //
-					- phi1(i*h1)*phi1(j*h2)*s0x0 // sides[0]->x(0) //
-					- phi2(i*h1)*phi1(j*h2)*s1x0 // sides[1]->x(0) //
-					- phi1(i*h1)*phi2(j*h2)*s3x1 // sides[3]->x(1) //
-					- phi2(i*h1)*phi2(j*h2)*s2x1; // sides[2]->x(1); //
-				// cout << "   x-value: " << x_[j+i*(m_+1)];
+				x_[j+i*(m_+1)] = phi1(i*h1)*x_j_s3[j]
+					+ phi2(i*h1)*x_j_s1[j]
+					+ phi1(j*h2)*x_i_s0[i]
+					+ phi2(j*h2)*x_i_s2[i]
+					- phi1(i*h1)*phi1(j*h2)*s0x0
+					- phi2(i*h1)*phi1(j*h2)*s1x0
+					- phi1(i*h1)*phi2(j*h2)*s3x1
+					- phi2(i*h1)*phi2(j*h2)*s2x1;
 
-				y_[j+i*(m_+1)] = phi1(i*h1)*y_j_s3[j] // sides[3]->y(j*h2) //
-					+ phi2(i*h1)*y_j_s1[j] // sides[1]->y(j*h2) //
-					+ phi1(j*h2)*y_i_s0[i] // s0yi // sides[0]->y(i*h1) //
-					+ phi2(j*h2)*y_i_s2[i] // s2yi // sides[2]->y(i*h1) //
-					- phi1(i*h1)*phi1(j*h2)*s0y0 // sides[0]->y(0) //
-					- phi2(i*h1)*phi1(j*h2)*s1y0 // sides[1]->y(0) //
-					- phi1(i*h1)*phi2(j*h2)*s3y1 // sides[3]->y(1) //
-					- phi2(i*h1)*phi2(j*h2)*s2y1; // sides[2]->y(1); //
-				// cout <<"   y-value: " << y_[j+i*(m_+1)] << endl;
+
+				y_[j+i*(m_+1)] = phi1(i*h1)*y_j_s3[j]
+					+ phi2(i*h1)*y_j_s1[j]
+					+ phi1(j*h2)*y_i_s0[i]
+					+ phi2(j*h2)*y_i_s2[i]
+					- phi1(i*h1)*phi1(j*h2)*s0y0
+					- phi2(i*h1)*phi1(j*h2)*s1y0
+					- phi1(i*h1)*phi2(j*h2)*s3y1
+					- phi2(i*h1)*phi2(j*h2)*s2y1;
 
 			}
 		}
-	}
-
-	// StrechGrid will chage the y values of the gird. It assumes y goes from 0 to 3
-	// The amount the grid will be streched is given by the variable STRECH
-	void strechGrid(double strech = 1.5){
-		if(n_ != 0){
-			for(int i = 0; i<= n_; i++){
-				for(int j = 0; j<= m_; j++){
-					y_[j+i*(m_+1)] = 3*(exp(strech*y_[j+i*(m_+1)]/3)-1)/(exp(strech)-1);
-				}
-			}
-		}
-		return;
-	}
-
-	// Performs strech similar to the function StrechGrid. In this function however the
-	// max and min is not hardcoded but taken as args.
-	void gammaStrechGrid(double gamma = 1.5, double mi = 0, double mx = 3){
-		if(n_ != 0){
-			for(int i = 0; i<= n_; i++){
-				for(int j = 0; j<= m_; j++){
-					y_[j+i*(m_+1)] = pow(((y_[j+i*(m_+1)]-mi)/(mx- mi)),gamma)*(mx- mi) + mi;
-				}
-			}
-		}
-		return;
 	}
 
 	// Saves the x & y-values as a single array in a binary file.
@@ -298,7 +275,7 @@ public:
 		}
     	o_ = orientation;
     	Sdim_ = SecondDim;
-    	lb = integrate(l,a_,b_,tol/100);  // total length of cruve.
+    	lb = integrate(l,a_,b_,tol/100);  // total length of curve.
 	}
 
 	~curvStraight(){}
@@ -423,34 +400,31 @@ int main() {
 	cout << " (" << D.x(0.75) << ", " << D.y(0.75) << ")" << endl;
 	cout << " (" << D.x(1) << ", " << D.y(1) << ")" << "\n" << endl;
 
-	// Create and save grid to (formed by the four straight curves.)
-
+	// Create and save a grid (formed by the four straight
+	// curves.)
 	Domain Grid(A,B,C,D);
-
-	Grid.generate_grid(50,20);
-
+	Grid.generate_grid(49,19,false);
 	Grid.save2file("task3.bin");
 
-	// Create and save grid. The computational time for generation of points measured. 
-
+	// Create and save grid with the given exponential
+	// function. The computational time for generation of points
+	// measured.
 	Domain Grid2(E,B,C,D);
 
 	clock_t t;
-	t = clock();
+	t = clock(); // start timing
 
-	Grid2.generate_grid(49,19);
+	Grid2.generate_grid(49,19,false);
 
 	t = clock() - t;
-	int t2 = (int) t;
-  	printf (" It took %d clicks (%f seconds).\n",t2,((float)t)/CLOCKS_PER_SEC);
+
+  	printf (" It took %d clicks (%f seconds).\n",(int) t,((float)t)/CLOCKS_PER_SEC);
 
 	Grid2.save2file("task4.bin");
 
-
-  	// The amount of strech is given as arg
-	//Grid2.strechGrid(1.5);
-  	//Grid.gammaStrechGrid(0.5,0,3);
-	//Grid2.save2file("task5.bin");
+	// Create stretched grid according to task 5
+	Grid2.generate_grid(49,19,true);
+	Grid2.save2file("task5.bin");
 
 
 #ifdef _WIN32
