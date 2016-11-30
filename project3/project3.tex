@@ -34,11 +34,11 @@
 \section*{Project 3}
 \subsection*{Task 1 - Abstract Class}
 
-The class \texttt{Curvebase} is created to hold basic functionality for curves, but not the curves themselves. The class has therefore the functions \texttt{x} and \texttt{y} that call the derived classes that contain the specific curve information. The grid generation for which the class will be used should not know about specifics either so the \texttt{Curvebase} is a kind of interfaces that convert a normalized position on a curve (zero to one) to the actual position that the grid point generation requires. The functions \texttt{x} and \texttt{y} will thus take the normalized arc length parameter $s$ and return \texttt{xp}$(p)$ and \texttt{yp}$(p)$ respectively. The functions \texttt{xp} and \texttt{yp} are pure virtual function (i.e. must be implemented in the derived class) that return $x$ and $y$-values given $p$ which is the actual position on the curved. Before calling \texttt{xp} and \texttt{yp} Curvebase must calculate $p$ from $s$. This is done by solving the equation 
+The class \texttt{Curvebase} is created to hold basic functionality for curves, but not the curves themselves. The class has therefore the functions \texttt{x} and \texttt{y} that call the derived classes that contain the specific curve information. The grid generation for which the class will be used should not know about specifics either so the \texttt{Curvebase} is a kind of interfaces that convert a normalized position on a curve (zero to one) to the actual position that the grid point generation requires. The functions \texttt{x} and \texttt{y} will thus take the normalized arc length parameter $s$ and return \texttt{xp}$(p)$ and \texttt{yp}$(p)$ respectively. The functions \texttt{xp} and \texttt{yp} are pure virtual function (i.e. must be implemented in the derived class) that return $x$ and $y$ values given $p$ which is the actual position on the curved. Before calling \texttt{xp} and \texttt{yp} Curvebase must calculate $p$ from $s$. This is done by solving the equation
 
 $$ \texttt{fp}(p) = \ell(p)- s\cdot  \ell(b) = 0 $$
 
-where 
+where
 
 $$ \ell (p) = \int_a^p \sqrt{\texttt{dxp}(q)^2+\texttt{dyp}(q)^2} \textrm{d}q $$
 
@@ -69,7 +69,7 @@ x[j+i*(m\_+1)]  &= \varphi_1(ih_1)\cdot \textrm{sides}[3]-\!\!>\texttt{x}(jh_2) 
 	&- \varphi_2(ih_1) \varphi_2(jh_2) \cdot  \textrm{sides}[2]-\!\!>\texttt{x}(1)
 \end{align*}
 
-where $s$ is given by $ih_1$ and $jh_2$ depending on the direction. The four last terms are corner correction terms. Calculating this expression $(m\_+1)(n\_+1)$ times is very inefficient since the calling and calculation of the \texttt{x}-function of a side is computationally heavy. We can however reduce the number of calls. The $\varphi$-functions are very small and can be left as they are (inlining might give a little improvement but the complier will probably perform inlining even without an explicit ``inline declaration''). We should however lift out the parts that contain the calls to sides.\texttt{x}(). We note that the ``sides'' part of the four corner terms does not depend on $i$ and $j$. It is thus extremely inefficient to recalculate them for every loop iteration. We can simply calculate them once before the loop starts. We also note that the first four lines are calculated $(m\_+1)(n\_+1)$ times even though $(m\_+1)$ times or $(n\_+1)$ times would be enough. We do this by calculating the first two lines in one loop and storing them in a vector, then doing the same thing for the 3rd and 4th line. The nested loop that finally puts everything together will thus not contain one call to the heavy \texttt{x}-function. This gives totally a decrease in computational time by a factor $\sim 2n\_ $ or $2m\_ $ depending how you write the nested loop. After the improvements generating one million grid points took e.g. $2.5$ seconds on an average Intel core duo processor (from 2008).  \\
+where $s$ is given by $ih_1$ and $jh_2$ depending on the direction. The four last terms are corner correction terms. Calculating this expression $(m\_+1)(n\_+1)$ times is very inefficient since the calling and calculation of the \texttt{x}-function of a side is computationally heavy. We can however reduce the number of calls. The $\varphi$-functions are very small and can be left as they are (inlining might give a little improvement but the compiler will probably perform inlining even without an explicit ``inline declaration''). We should however lift out the parts that contain the calls to sides.\texttt{x}(). We note that the ``sides'' part of the four corner terms does not depend on $i$ and $j$. It is thus extremely inefficient to recalculate them for every loop iteration. We can simply calculate them once before the loop starts. We also note that the first four lines are calculated $(m\_+1)(n\_+1)$ times even though $(m\_+1)$ times or $(n\_+1)$ times would be enough. We do this by calculating the first two lines in one loop and storing them in a vector, then doing the same thing for the 3rd and 4th line. The nested loop that finally puts everything together will thus not contain one call to the heavy \texttt{x}-function. This gives totally a decrease in computational time by a factor $\sim 2n\_ $ or $2m\_ $ depending how you write the nested loop. After the improvements generating one million grid points took e.g. $2.5$ seconds on an average Intel core duo processor (from 2008).  \\
 
 \subsection*{Task 4 - Data Exportation}
 
@@ -95,11 +95,11 @@ A public function in the Domain class, \texttt{save2file}, writes the grid point
 \subsection*{Task 5 - Grid stretching}
 
 
-By adding an (optional) boolean argument in the generate\_grid function the user can choose to stretch the grid. The expression given in task 5 was modified to
+By adding an (optional) boolean argument in the \texttt{generate\_grid()} method the user can choose to stretch the grid. The expression given in task 5 was modified to
 
 $$ ss = \frac{\exp(1.5s)-1}{\exp(1.5)-1}$$
 
-and applied to $j*h_2$ in the calls to the functions \texttt{x} and \texttt{y} in \texttt{Curvebase}. This stretches the grid in the vertical direction, while still not changing the boundaries (as desired) as can be seen in Figure \ref{fig:stretched}. By changing the size and the sign of constant found in the expression above (here 1.5) the degree of stretching and the direction of increasing point density (up or down) can be controlled.   
+and applied to $j*h_2$ in the calls to the functions \texttt{x} and \texttt{y} in \texttt{Curvebase}. This stretches the grid in the vertical direction, while still not changing the boundaries (as desired) as can be seen in Figure \ref{fig:stretched}. By changing the size and the sign of constant found in the expression above (here 1.5) the degree of stretching and the direction of increasing point density (up or down) can be controlled.
 
 \begin{figure}[H]
   \centering
