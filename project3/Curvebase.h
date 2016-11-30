@@ -23,7 +23,7 @@ class Curvebase{
 
   double a_;
   double b_;
-  double lb; // Length of curve. Initialization is done in instansiated class.
+  double lb; // Length of curve. Initialization is done in instantiated class.
 
   double (Curvebase::*l)(double)=&Curvebase::f; // class member function pointer.
   double (Curvebase::*fpP)(double,double)=&Curvebase::fp;

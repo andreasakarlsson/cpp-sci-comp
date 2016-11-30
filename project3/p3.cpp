@@ -2,6 +2,8 @@
 #include <cmath>
 #include <cstdio>
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
+#include "curvStraight.h"
+#include "curvExp.h"
 #include "Curvebase.h"
 
 #ifdef _WIN32
@@ -176,91 +178,6 @@ private:
 	}
 };
 
-
-class curvStraight: public Curvebase {
-
-public:
-	curvStraight(double a1, double b1, int orientation, double SecondDim) : Curvebase() {
-		if ( b1 < a1 ) {
-			cout << "\n changed a & b order" << endl;
-			a_ = b1;
-			b_ = a1;
-		} else {
-    			a_ = a1;
-    			b_ = b1;
-		}
-    	o_ = orientation;
-    	Sdim_ = SecondDim;
-    	lb = integrate(l,a_,b_,tol/100);  // total length of curve.
-	}
-
-	~curvStraight(){}
-
-
-private:
-
-	double xp(double p){
-		if(o_ == 0) return p;
-		else return Sdim_;
-	}
-	double yp(double p){
-		if(o_ == 0) return Sdim_;
-		else return p;
-	}
-	double dxp(double p){
-		if(o_ == 0) return 1.0;
-		else return 0.0;
-	}
-	double dyp(double p){
-		if(o_ == 0) return 0.0;
-		else return 1.0;
-	}
-
-	int o_;
-	double Sdim_;
-
-
-};
-
-class curvExp: public Curvebase {
-
-public:
-	curvExp(double a1, double b1) : Curvebase() {
-		if ( b1 < a1 ) {
-			cout << "\n changed a & b order" << endl;
-			a_ = b1;
-			b_ = a1;
-		} else {
-    			a_ = a1;
-    			b_ = b1;
-		}
-    	lb = integrate(l,a_,b_,tol/100); // total length of cruve.
-	}
-
-	~curvExp(){}
-
-private:
-
-	double xp(double p){
-		return p;
-	}
-	double yp(double p){
-		if(p<-3)
-			return 0.5/(1+exp(-3*(p+6)));
-		else
-			return 0.5/(1+exp(3*p));
-	}
-	double dxp(double p){
-		return 1.0;
-	}
-	double dyp(double p){
-		if(p<-3)
-			return (3/2)*exp(-3*(p+6))/((1+exp(-3*(p+6)))*(1+exp(-3*(p+6))));
-		else
-			return -(3/2)*exp(3*p)/((1+exp(3*p))*(1+exp(3*p)));
-	}
-
-};
 
 int main() {
 

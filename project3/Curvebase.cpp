@@ -1,6 +1,9 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+
+using namespace std;
+
 #include "Curvebase.h"
 
 double Curvebase::integrate(double (Curvebase::*funcp)(double), double a, double b, double tol1){
