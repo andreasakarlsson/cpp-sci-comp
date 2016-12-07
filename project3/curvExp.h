@@ -3,7 +3,7 @@
 
 #include "Curvebase.h"
 
-class curvExp : public Curvebase::Curvebase {
+class curvExp : public Curvebase {
 
 public:
   curvExp(double a1, double b1);

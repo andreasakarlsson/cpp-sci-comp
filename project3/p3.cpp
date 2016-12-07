@@ -23,7 +23,7 @@ public:
 		sides[2] = &s3;
 		sides[3] = &s4;
 
-		if(check_consistency(1e-5) == false){
+		if(!check_consistency(1e-5)){
 			sides[0] = sides[1] = sides[2] = sides[3] = nullptr;
 			cout << " Not consistent. All curves set to zero.\n" << endl;
 		}
