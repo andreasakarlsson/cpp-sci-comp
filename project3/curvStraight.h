@@ -3,18 +3,18 @@
 
 #include "Curvebase.h"
 
-class curvStraight : public Curvebase::Curvebase {
+class curvStraight : public Curvebase {
 
 public:
   curvStraight(double a1, double b1, int orientation, double SecondDim);
-  ~curvStraight();
-
+  virtual ~curvStraight();
 
 private:
   double xp(double p);
   double yp(double p);
   double dxp(double p);
   double dyp(double p);
+
   int o_;
   double Sdim_;
 

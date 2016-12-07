@@ -1,8 +1,7 @@
 #include <iostream>
-#include "Curvebase.h"
 #include "curvStraight.h"
 
-curvStraight::curvStraight(double a1, double b1, int orientation, double SecondDim) : Curvebase::Curvebase() {
+curvStraight::curvStraight(double a1, double b1, int orientation, double SecondDim) : Curvebase() {
   if ( b1 < a1 ) {
     std::cout << "\n changed a & b order" << std::endl;
     a_ = b1;
@@ -16,7 +15,7 @@ curvStraight::curvStraight(double a1, double b1, int orientation, double SecondD
   lb = Curvebase::integrate(l,a_,b_,tol/100);  // total length of curve.
 }
 
-curvStraight::~curvStraight(){}
+curvStraight::~curvStraight(){ }
 
 
 double curvStraight::xp(double p){
@@ -35,6 +34,3 @@ double curvStraight::dyp(double p){
   if(o_ == 0) return 0.0;
   else return 1.0;
 }
-
-int o_;
-double Sdim_;

@@ -53,6 +53,9 @@ double Curvebase::fp(const double p, const double s){
 
 Curvebase::Curvebase() {}
 
+double (Curvebase::*l)(double) = &Curvebase::f; // class member function pointer.
+double (Curvebase::*fpP)(double,double) = &Curvebase::fp;
+
 double Curvebase::x(double s){
   if((s<0)||(s>1)){ std::cout << "Got invalid s" << std::endl;}
   double p = newton(fpP,l,s,0.5*(a_+b_),tol);

@@ -4,7 +4,7 @@ CPPFLAGS=-g -Wall -std=c++11
 all: plot
 
 build:
-	$(CPP) $(CPPFLAGS) p3.cpp curvExp.cpp curvStraight.cpp Curvebase.cpp -o p3
+	$(CPP) $(CPPFLAGS) p3.cpp curvExp.cpp curvStraight.cpp Domain.cpp Curvebase.cpp -o p3
 
 run: build
 	./p3
