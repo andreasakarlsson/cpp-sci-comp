@@ -13,5 +13,5 @@ axis(my_axis)
 axis equal
 set(gcf, 'PaperPosition', [-1 0 14 4]);
 set(gcf, 'PaperSize', [12 4]);
-print(strcat(fname, '.pdf'), '-dpdf');
+print(strcat(fname, '.jpg'), '-djpeg');
 exit;
