@@ -1,0 +1,13 @@
+CPP=g++
+CPPFLAGS=-g -Wall -std=c++11
+
+all: run
+
+build:
+	$(CPP) $(CPPFLAGS) testMatrixNEW.cpp MatrixNEW.cpp -o testMatrixNEW
+
+run: build
+	./testMatrixNEW
+
+clean:
+		del -f testMatrixNEW.exe
