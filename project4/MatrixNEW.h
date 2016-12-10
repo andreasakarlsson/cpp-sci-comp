@@ -32,6 +32,7 @@ public:
 
 	friend ostream& operator<<(ostream& stream, const MatrixNEW& matrix);
 	double& operator()(const int i, const int j) const;
+	double* getMatrix();
 
 };
 

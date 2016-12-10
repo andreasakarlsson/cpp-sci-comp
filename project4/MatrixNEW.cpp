@@ -135,3 +135,7 @@ ostream& operator<<( ostream &output, const MatrixNEW &M ) {
 double& MatrixNEW::operator()(const int i, const int j) const {
 	return Mat[i+j*m_];
 }
+
+double* MatrixNEW::getMatrix(){
+	return Mat;
+}
