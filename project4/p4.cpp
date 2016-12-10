@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-#include <cstdio>
+#include <cstdio>		// fopen etc
+#include <stdlib.h>		// abort()
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 #include <memory>		// for shared_ptr
 
@@ -9,6 +10,7 @@
 #include <conio.h> // loads getch();
 #endif
 
+#include "GFkt.h"
 #include "MatrixNEW.h"
 #include "../project3/Domain.h"
 #include "../project3/Curvebase.h"
@@ -17,45 +19,9 @@
 using namespace std;
 
 
-class GFkt{
-	
-private:
-
-	MatrixNEW u;
-	shared_ptr<Domain> grid;
-
-public:
-
-	GFkt(shared_ptr<Domain> grid_) : u(grid_->xsize()+1,grid_->ysize()+1,0.0), grid(grid_) {}
-
-	GFkt(const GFkt& U) : u(U.u), grid(U.grid) {}
-
-	GFkt& operator=(const GFkt& U) {
-		return *this;
-	}
-
-	GFkt operator+(const GFkt& U) const {
-		if(grid == U.grid) { // must be same grid to allow addition
-			GFkt tmp(grid);
-			tmp.u = u + U.u; 
-			return tmp;
-		}
-		else cout << "error" << endl; // give error somehow
-	}
-
-	GFkt operator*(const GFkt& U) const {
-		if(grid == U.grid) { // must be same grid to allow pointwise multiplication
-			GFkt tmp(grid);
-			for (int j = 0; j <= grid->ysize(); j++)
-				for (int i = 0; i <= grid->xsize(); i++)
-					tmp.u(i,j) = u(i,j)*U.u(i,j);
-			return tmp;
-		}
-		else cout << "error" << endl; // give error somehow
-	}
-
-};
-
+double u(double x, double y){
+	return sin(pow(x/10.0,2))*cos(x/10.0)+y;
+}
 
 
 int main() {
@@ -72,6 +38,29 @@ int main() {
 
 	GFkt GA(Grid);
 
+
+	double (*fp)(double,double) = u;  // function pointer to u()
+
+  	cout << u(1,0) << endl;	
+  	cout << u(9,0) << endl;
+  	cout << u(16,0) << endl;
+
+  	GA.setfunction(fp);
+
+  	GA.save2file("task3-1.bin");
+
+  	/* SHOW taks3-1.bin with MATLAB:
+
+  	fid = fopen('task3-1.bin','r');
+	c = fread(fid,'double');
+	fclose(fid);
+	A = vec2mat(c,50);
+	figure(101)
+	imagesc(A)
+	figure(102)
+	surf(A)
+
+	*/
 
 
 
