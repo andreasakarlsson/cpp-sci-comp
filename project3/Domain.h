@@ -45,15 +45,17 @@ class Domain {
   double y_j_s1;
 
   void save2file(const char* fname = "outfile.bin");
+
+  int xsize();
+  int ysize();
+  bool grid_valid();
+
   private:
   Curvebase* sides[4];
 
-  inline double phi1(double w){
-    return 1.0 - w;
-  }
-  inline double phi2(double w){
-    return w;
-  }
+  inline double phi1(double w);
+  inline double phi2(double w);
+  
   double *x_,*y_;
 };
 #endif

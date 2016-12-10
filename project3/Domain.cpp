@@ -49,10 +49,10 @@ void Domain::generate_grid(int n, int m, bool stretch){
     return;
   }
   if((n<1)||(m<1)) {m=20;n=20; std::cout << "set m and n to 20" << std::endl;}
-  if(n_ != 0) { // if n_0 non-zero => grid allready exist. Must be deleted.
-    delete [] x_;
-    delete [] y_;
-  }
+  // if(n_ != 0) { // if n_0 non-zero => grid allready exist. Must be deleted.
+  //   delete [] x_;
+  //   delete [] y_;
+  // }
   n_ = n;
   m_ = m;
   x_ = new double[(m_+1)*(n_+1)];
@@ -144,7 +144,13 @@ void Domain::save2file(const char* fname){
   fclose(fil);
 }
 
-// Curvebase::Curvebase() {}
+int Domain::xsize(){ return m_; }
+int Domain::ysize(){ return n_; }
+bool Domain::grid_valid() { return m_ != 0; }
+
+
+inline double Domain::phi1(double w){ return 1.0 - w; }
+inline double Domain::phi2(double w){ return w; }
 
 Domain::~Domain(){
   if (n_ > 0){
