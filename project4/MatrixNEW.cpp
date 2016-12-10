@@ -51,6 +51,8 @@ MatrixNEW& MatrixNEW::operator=(MatrixNEW&& M){
 	return *this;
 }
 
+ // OVERLOADING
+
 MatrixNEW MatrixNEW::operator+(const MatrixNEW& M) const {
 	MatrixNEW tempM(m_, n_);
 	if(m_ == M.m_ && n_ == M.n_){
@@ -119,8 +121,6 @@ MatrixNEW& MatrixNEW::operator*=(const MatrixNEW& M){
  	return *this;
 }
 
-// Additional methods
-
 ostream& operator<<( ostream &output, const MatrixNEW &M ) {
   output << endl << M.m_ << "x" << M.n_ << " matrix:" << endl;
   output << "--------------------" << endl;
@@ -132,6 +132,6 @@ ostream& operator<<( ostream &output, const MatrixNEW &M ) {
   return output;
 }
 
-double MatrixNEW::getVal(const int& i, const int& j){
+double& MatrixNEW::operator()(const int i, const int j) const {
 	return Mat[i+j*m_];
 }

@@ -31,7 +31,7 @@ public:
 	MatrixNEW& operator*=(const MatrixNEW& M);
 
 	friend ostream& operator<<(ostream& stream, const MatrixNEW& matrix);
-	double getVal(const int& i, const int& j);
+	double& operator()(const int i, const int j) const;
 
 };
 

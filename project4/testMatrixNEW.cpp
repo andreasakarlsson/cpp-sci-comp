@@ -51,7 +51,12 @@ using namespace std;
 
 	cout << A << endl;	
 
-	cout << A.getVal(2,4) << endl;
+	cout << A(2,4) << endl;
+
+	A(2,4) = A(2,3)*A(2,3);
+
+	cout << A << endl;
+	
 
 	#ifdef _WIN32
 		cout << "\n Press any key to quit..." << endl;
