@@ -144,8 +144,8 @@ void Domain::save2file(const char* fname){
   fclose(fil);
 }
 
-int Domain::xsize(){ return m_; }
-int Domain::ysize(){ return n_; }
+int Domain::xsize(){ return n_; }
+int Domain::ysize(){ return m_; }
 bool Domain::grid_valid() { return m_ != 0; }
 
 
