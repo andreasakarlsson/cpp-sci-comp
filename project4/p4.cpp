@@ -49,16 +49,41 @@ int main() {
 
   	GA.save2file("task3-1.bin");
 
-  	/* SHOW taks3-1.bin with MATLAB:
+  	GA.Dx("task3-2.bin");
+  	GA.Dy("task3-3.bin");
 
-  	fid = fopen('task3-1.bin','r');
+  	GA.Laplacian("task3-4.bin");
+
+  	//
+  	//double* y_ = Grid->xvector();
+
+  	/* SHOW taks3-2.bin with MATLAB:
+
+	fid = fopen('task1.bin','r');
 	c = fread(fid,'double');
 	fclose(fid);
-	A = vec2mat(c,50);
+
+	x = c(1:length(c)/2);
+	y = c(length(c)/2+1:end);
+
 	figure(101)
-	imagesc(A)
+	plot(x,y,'.')
+	axis([-12 7 -1 4])
+
+
+	fid = fopen('task3-2.bin','r');
+	u = fread(fid,'double');
+	fclose(fid);
+	A = vec2mat(u,50);
 	figure(102)
-	surf(A)
+	imagesc(A)
+	figure(103)
+	X = vec2mat(x,20)';
+	Y = vec2mat(y,20)';
+	Y(end:-1:1) = Y;
+	surf(X,Y,A)
+	figure(104)
+	plot(X(end-1,:),A(end-1,:))
 
 	*/
 

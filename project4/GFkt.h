@@ -29,6 +29,9 @@ public:
 	GFkt operator*(double d) const;
 	void setfunction(double (*fp)(double,double));
 	void save2file(const char* fname);
+	void Dx(const char* fname);
+	void Dy(const char* fname);
+	void Laplacian(const char* fname);
 
 };
 
