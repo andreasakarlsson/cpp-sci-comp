@@ -50,6 +50,9 @@ class Domain {
   int ysize();
   bool grid_valid();
 
+  double* xvector();
+  double* yvector();
+
   private:
   Curvebase* sides[4];
 

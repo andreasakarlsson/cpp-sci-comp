@@ -148,6 +148,9 @@ int Domain::xsize(){ return n_; }
 int Domain::ysize(){ return m_; }
 bool Domain::grid_valid() { return m_ != 0; }
 
+double* Domain::xvector(){ return x_; }
+double* Domain::yvector(){ return y_; }
+
 
 inline double Domain::phi1(double w){ return 1.0 - w; }
 inline double Domain::phi2(double w){ return w; }
