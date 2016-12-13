@@ -17,8 +17,10 @@ using namespace std;
 
 GFkt::GFkt(shared_ptr<Domain> grid_) : u(grid_->xsize()+1,grid_->ysize()+1,0.0), grid(grid_) {}
 
+// copy constructor
 GFkt::GFkt(const GFkt& U) : u(U.u), grid(U.grid) {}
 
+// copy assignment constructor
 GFkt& GFkt::operator=(const GFkt& U) {
 	return *this;
 }
