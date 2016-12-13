@@ -74,12 +74,68 @@ constructors and operator overloading that are required to calculate
 the matrix exponential with Taylor expansion and Horner's scheme,
 i.e., the same way as in Section~\ref{subsec:task1}.
 
-The matrix object contains an int with the size of the matrix and a
-C++ vector object that contains the matrix values. The approach to
-determine the required number of terms in the Taylor expansion to get
-an error below a set tolerance is equivalent to that in
+The matrix object contains an \texttt{int} with the size of the matrix
+and a C++ vector object that contains the matrix values. The approach
+to determine the required number of terms in the Taylor expansion to
+get an error below a set tolerance is equivalent to that in
 Section~\ref{subsec:task1}. Just as for Section~\ref{subsec:task1}
 this works well for matrices with small elements but not for large
-elements since the result is so large that the type double cannot
-contain the values with enough precision.
+elements since the result is so large that the type \texttt{double}
+cannot contain the values with enough precision.
+
+In order to test the \texttt{matrixExp} function we compared it with
+Matlab's \texttt{r8mat\_{expm1}} function. We started by creating a
+\texttt{Matrix} class objects called $M_{\text{input}}$.
+
+\[
+M_{\text{input}}=
+  \begin{bmatrix}
+    1 & 3 & 10 & 45 \\
+    12 & 3 & 5 & 0 \\
+    12 & 1 & 3 & 7 \\
+    19 & 4 & 9 & 6 \\
+  \end{bmatrix}
+\]
+
+We then used our \texttt{matrixExp} function to calculate the
+exponential of the matrix $E_{\text{our}}$.
+
+\[
+E_{\text{our}} = \mathtt{matrixExp(M,0.001)} =
+  \begin{bmatrix}
+ 8.47678e+16 & 2.18816e+16 & 5.62372e+16 & 1.24171e+17 \\
+ 3.30298e+16 & 8.52616e+15 & 2.19129e+16 & 4.83831e+16 \\
+ 4.02549e+16 & 1.03912e+16 & 2.67062e+16 & 5.89667e+16 \\
+ 6.21118e+16 & 1.60332e+16 & 4.12066e+16 & 9.09833e+16 \\
+  \end{bmatrix}
+\]
+
+We also calculated the exponential of the matrix using Matlabs
+\texttt{r8mat\_{expm1}} function, which produces the matrix displayed
+as $E_{\text{matlab}}$.
+
+\[
+E_{\text{matlab}} = \mathtt{r8mat\_{expm1}(4, mArray)} =
+  \begin{bmatrix}
+ 8.47678e+16 & 2.18816e+16 & 5.62372e+16 & 1.24171e+17 \\
+ 3.30298e+16 & 8.52616e+15 & 2.19129e+16 & 4.83831e+16 \\
+ 4.02549e+16 & 1.03912e+16 & 2.67062e+16 & 5.89667e+16 \\
+ 6.21118e+16 & 1.60332e+16 & 4.12066e+16 & 9.09833e+16 \\
+  \end{bmatrix}
+\]
+
+We than compared the two functions by calculating the difference which
+is displayed as $E_{\text{difference}}$.
+
+
+\[
+  E_{\text{difference}} = E_{\text{our}} - E_{\text{matlab}} =
+\begin{bmatrix}
+ 672 & 144 & 448 & 784 \\
+ 208 & 45 & 140 & 248 \\
+ 320 & 70 & 216 & 400 \\
+ 424 & 92 & 288 & 512 \\
+\end{bmatrix}
+\]
+
 \end{document}

@@ -1,7 +1,11 @@
 #include <iostream>
 #include <cmath>
-//#include <conio.h> // loads getch();
 #include <vector>
+
+#ifdef _WIN32
+#include <conio.h> // loads getch();
+#endif
+
 using namespace std;
 double myexp(double x, double tol);
 
@@ -47,8 +51,11 @@ int main() {
 
     }
   }
-	//getch();
 
+#ifdef _WIN32
+	cout << "\n Press any key to quit..." << endl;
+	getch();
+#endif
 
 	return 0;
 }

@@ -1,8 +1,12 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
-// #include <conio.h> // loads getch();
 #include <vector>
+
+#ifdef _WIN32
+#include <conio.h> // loads getch();
+#endif
+
 #include "matrix.h"
 #include "r8lib.h"
 #include "r8mat_expm1.h"
@@ -155,6 +159,9 @@ Matrix MDIFFO = C - ONESEM;
     " when using r8mat_expm1 and our implementation:"
        << MDIFF;
 
-  // getch();
+#ifdef _WIN32
+  cout << "\n Press any key to quit..." << endl;
+  getch();
+#endif
   return 0;
 }
