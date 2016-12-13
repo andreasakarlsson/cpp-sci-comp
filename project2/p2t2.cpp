@@ -133,31 +133,56 @@ Matrix MDIFFO = C - ONESEM;
     " when using r8mat_expm1 and our implementation:"
        << MDIFFO;
 
-  cout << "--- We now define a second matrix for the test ---" << endl;
-  vector<double> t = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
-  double tArray[16] = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+  cout << "--- We now define a matrix with numbers for the test ---" << endl;
+  vector<double> t  = {1, 3, 1, 4, 2, 3, 1, 0, 2, 1, 3, 2, 4, 4, 2, 1};
+  double tArray[16] = {1, 3, 1, 4, 2, 3, 1, 0, 2, 1, 3, 2, 4, 4, 2, 1};
 
-  Matrix T = Matrix(t);
-  cout << "This is the test-matrix."
+  Matrix M1 = Matrix(t);
+  cout << "This is the first test-matrix with low numbers."
     " It will be used for the next comparison"
-    " of the exponential functions:" << T;
+    " of the exponential functions:" << M1;
 
-  Matrix CC = matrixExp(T,0.001);
+  Matrix E1our = matrixExp(M1,0.001);
   cout << "Results from our matrixExp for the test-matrix"
-    " (tolerance of 0.001):" << CC;
+    " (tolerance of 0.001):" << E1our;
 
   // From the matlab source code:
-  double* TE = r8mat_expm1(ac, tArray);
+  double* E1ml = r8mat_expm1(ac, tArray);
 
   // Convert matlab results into our Matrix object for comparison
-  Matrix TEM =  Matrix(r8matToVec(TE, 16));
+  Matrix EM1ml =  Matrix(r8matToVec(E1ml, 16));
 
-  cout << "Results from r8mat_expm1 for the test-matrix:" << TEM;
+  cout << "Results from r8mat_expm1 for the test-matrix:" << EM1ml;
 
-  Matrix MDIFF = CC - TEM;
+  Matrix MDIFF1 = E1our - EM1ml;
   cout << "Difference for the test-matrix"
     " when using r8mat_expm1 and our implementation:"
-       << MDIFF;
+       << MDIFF1;
+
+  cout << "--- We now define a second matrix for the test ---" << endl;
+  vector<double> t2 = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+  double t2Array[16] = {1, 3, 10, 45, 12, 3, 5, 0, 12, 1, 3, 7, 19, 4, 9, 6};
+
+  Matrix M2 = Matrix(t2);
+  cout << "This is the second test-matrix."
+    " It will be used for the next comparison"
+    " of the exponential functions:" << M2;
+
+  Matrix E2our = matrixExp(M2,0.001);
+  cout << "Results from our matrixExp for the second test-matrix"
+    " (tolerance of 0.001):" << E2our;
+
+  // From the matlab source code:
+  double* E2ml = r8mat_expm1(ac, t2Array);
+
+  Matrix EM2ml = Matrix(r8matToVec(E2ml, 16));
+  cout << "Results from r8mat_expm1 for the second test-matrix:" << EM2ml;
+
+
+  Matrix MDIFF2 = E2our - EM2ml;
+  cout << "Difference for the second test-matrix"
+    " when using r8mat_expm1 and our implementation:"
+       << MDIFF2;
 
 #ifdef _WIN32
   cout << "\n Press any key to quit..." << endl;
