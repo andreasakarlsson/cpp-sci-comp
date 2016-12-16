@@ -100,7 +100,7 @@ figID = figure(101);                             % open figure
 ux = sin((x./10).^2).*cos(x./10);                % x-component of u(x,y)
 
 dxu = 2/100.*x.*cos((x./10).^2).*cos(x./10) ...  % first parital derivative
-      - 1/10*sin((x./10).^2).*cos(x./10);
+      - 1/10*sin((x./10).^2).*sin(x./10);
 
 dxxu = 2/100*cos((x./10).^2).*cos(x./10) ...     % second partial derivative
        - (2/100.*x).^2.*sin((x./10).^2).*cos(x./10) ...
