@@ -14,6 +14,9 @@ class GFkt{
 private:
 
 	MatrixNEW u;
+	MatrixNEW ux;
+	MatrixNEW uy;
+	MatrixNEW uxx;
 	shared_ptr<Domain> grid;
 
 
