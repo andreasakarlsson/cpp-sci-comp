@@ -81,7 +81,7 @@ u(x,y) &= \sin\left(\left(\frac{x}{10}\right) ^2\right ) \cos(x/10)+y \\
 \frac{\partial}{\partial x} u(x,y) &= \frac{2}{100}x\cos\left(\left(\frac{x}{10}\right) ^2\right )\cos\left(\frac{x}{10}\right )- \frac{1}{10}\sin\left(\left(\frac{x}{10}\right) ^2\right )\sin\left (\frac{x}{10}\right )\\
 \frac{\partial}{\partial y} u(x,y) &= \frac{\partial}{\partial y}y = 1   \\
 \frac{\partial^2}{\partial x^2} u(x,y) &= \frac{2}{100}\cos\left(\left(\frac{x}{10}\right) ^2\right )\cos\left(\frac{x}{10}\right ) - \left ( \frac{2}{100}x\right )^2 \sin \left(\left(\frac{x}{10}\right) ^2\right )\cos\left(\frac{x}{10}\right ) \\
- &- \frac{2}{100}\frac{1}{10}\cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left(\frac{x}{10}\right ) - \frac{1}{10}\frac{2}{100}x \cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left (\frac{x}{10}\right )\\
+ &- \frac{2}{100}\frac{1}{10}x\cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left(\frac{x}{10}\right ) - \frac{1}{10}\frac{2}{100}x \cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left (\frac{x}{10}\right )\\
  & - \frac{1}{100}\sin\left(\left(\frac{x}{10}\right) ^2\right )\cos\left (\frac{x}{10}\right )\\
 \frac{\partial^2}{\partial y^2} u(x,y) &= 0 \\
 \Delta u(x,y) &= \frac{\partial^2}{\partial x^2} u(x,y) + \frac{\partial^2}{\partial y^2} u(x,y) =  \frac{\partial^2}{\partial x^2} u(x,y)
@@ -104,7 +104,7 @@ dxu = 2/100.*x.*cos((x./10).^2).*cos(x./10) ...  % first parital derivative
 
 dxxu = 2/100*cos((x./10).^2).*cos(x./10) ...     % second partial derivative
        - (2/100.*x).^2.*sin((x./10).^2).*cos(x./10) ...
-       - 1/250*cos((x./10).^2).*sin(x./10) ...
+       - 1/250*cos((x./10).^2).*x.*sin(x./10) ...
        - 1/100*sin((x./10).^2).*cos(x./10);
        
 subplot(1,3,1); plot(x,ux);
