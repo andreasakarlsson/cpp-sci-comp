@@ -18,10 +18,10 @@ using namespace std;
 GFkt::GFkt(shared_ptr<Domain> grid_) : u(grid_->xsize()+1,grid_->ysize()+1,0.0), 
 	ux(grid_->xsize()+1,grid_->ysize()+1,0.0), 
 	uy(grid_->xsize()+1,grid_->ysize()+1,0.0),
-	uxx(grid_->xsize()+1,grid_->ysize()+1,0.0),grid(grid_) {}
+	L(grid_->xsize()+1,grid_->ysize()+1,0.0),grid(grid_) {}
 
 // copy constructor
-GFkt::GFkt(const GFkt& U) : u(U.u), ux(U.ux), uy(U.uy), uxx(U.uxx), grid(U.grid) {}
+GFkt::GFkt(const GFkt& U) : u(U.u), ux(U.ux), uy(U.uy), L(U.L), grid(U.grid) {}
 
 // copy assignment constructor
 GFkt& GFkt::operator=(const GFkt& U) {
@@ -136,18 +136,25 @@ void GFkt::Dy(const char* fname){
 // Laplacian    
 void GFkt::Laplacian(const char* fname){
 	int n_ = grid->xsize(); int m_ = grid->ysize();
-	//MatrixNEW L(n_+1,m_+1,0.0);  // size 50 x 20
-	double* x_ = grid->xvector();   // not used now, but should be used in real solution
-	//double* y_ = grid->yvector();   
+	MatrixNEW uxx(n_+1,m_+1,0.0);  // size 50 x 20
+	MatrixNEW uyy(n_+1,m_+1,0.0);  // size 50 x 20
+	double* x_ = grid->xvector();
+	double* y_ = grid->yvector();   
+
 	for(int i=2; i<=n_-1; i++){   // from i=2 to i=48 i.e. borders = 0.0
-		for(int j=0; j<=m_; j++){
+		for(int j=0; j<=m_; j++){ 	// no borders.
 			//L(i,j) = (-4*u(i,j) + u(i+1,j) + u(i-1,j) + u(i,j+1) + u(i,j-1)); // just to try.
 			uxx(i,j) = (ux(i+1,j)-ux(i-1,j))/(x_[j+(i+1)*(m_+1)]-x_[j+(i-1)*(m_+1)]);
 		}
 	}
+	for(int i=0; i<=n_; i++){   // from i=0 to i=49 i.e. also borders
+		for(int j=1; j<=m_-1; j++){ // from j=1 to j=48 i.e. border = 0.0
+			uyy(i,j) = (uy(i,j+1)-uy(i,j-1))/(y_[(j+1)+i*(m_+1)]-y_[(j-1)+i*(m_+1)]);
+		}
+	}
 
-	  
-	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first, second and last column.
+	 // Not nice code, but sufficient for serving as a test.
+	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first, second and last column (for uxx).
 
 		for(int i=0; i<=1; i++){ 
 			double x0 = x_[j+(i+0)*(m_+1)];
@@ -171,8 +178,36 @@ void GFkt::Laplacian(const char* fname){
 		}
 	}
 
+
+	for(int i=0; i<=n_; i++){   // one sided expression supposed to fix first and last row (for uyy).
+
+		int j = 0;
+		double y0 = y_[(j+0)+i*(m_+1)];
+		double y1 = y_[(j+1)+i*(m_+1)];
+		double y2 = y_[(j+2)+i*(m_+1)];
+		double u0 = u(i,j+0);
+		double u1 = u(i,j+1);
+		double u2 = u(i,j+2);
+
+		uyy(i,j) =  2*(-u0*(y2-y1)+u1*(y2-y0)-u2*(y1-y0))/((y2-y0)*(y1-y0)*(y1-y2));
+
+		j = m_;
+		double yn  = y_[(j-0)+i*(m_+1)];
+		double yn1 = y_[(j-1)+i*(m_+1)];
+		double yn2 = y_[(j-2)+i*(m_+1)];
+		double un = u(i,j-0);
+		double un1 = u(i,j-1);
+		double un2 = u(i,j-2);
+
+		uyy(i,j) =  2*(-un*(yn1-yn2)+un1*(yn-yn2)-un2*(yn-yn1))/((yn-yn2)*(yn-yn1)*(yn2-yn1));
+
+	}
+
+
+	L = uxx + uyy;
+
 	FILE *fil;
 	fil = fopen(fname,"wb");
-	fwrite(uxx.getMatrix(),sizeof(double),(n_+1)*(m_+1),fil);
+	fwrite(L.getMatrix(),sizeof(double),(n_+1)*(m_+1),fil);
 	fclose(fil);
 }

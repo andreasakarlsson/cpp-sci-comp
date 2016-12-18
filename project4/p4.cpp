@@ -6,10 +6,6 @@
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 #include <memory>		// for shared_ptr
 
-#ifdef _WIN32
-#include <conio.h> // loads getch();
-#endif
-
 #include "GFkt.h"
 #include "MatrixNEW.h"
 #include "../project3/Domain.h"
@@ -54,9 +50,6 @@ int main() {
 
   	GA.Laplacian("task3-4.bin");
 
-  	//
-  	//double* y_ = Grid->xvector();
-
   	/* SHOW taks3-2.bin with MATLAB:
 
 	fid = fopen('task1.bin','r');
@@ -87,11 +80,5 @@ int main() {
 
 	*/
 
-
-
-// #ifdef _WIN32
-// 	cout << "\n Press any key to quit..." << endl;
-// 	getch();
-// #endif
 	return 0;
 }

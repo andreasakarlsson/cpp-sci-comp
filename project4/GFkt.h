@@ -16,7 +16,7 @@ private:
 	MatrixNEW u;
 	MatrixNEW ux;
 	MatrixNEW uy;
-	MatrixNEW uxx;
+	MatrixNEW L;
 	shared_ptr<Domain> grid;
 
 
