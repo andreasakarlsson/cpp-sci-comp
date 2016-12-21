@@ -101,10 +101,22 @@ void GFkt::Dx(const char* fname){
 			ux(i,j) = (u(i+1,j) - u(i-1,j))/(x_[j+(i+1)*(m_+1)]-x_[j+(i-1)*(m_+1)]); 
 		}
 	}
-	for(int j=0; j<=m_; j++){   // fixes borders (first and last column)
-		// one sides expressions // Better expressions should be use for improved accuracy
-		ux(0,j) =  (u(1,j) - u(0,j))/(x_[j+(1)*(m_+1)]-x_[j+(0)*(m_+1)]); // D+
-		ux(n_,j) = (u(n_,j) - u(n_-1,j))/(x_[j+(n_)*(m_+1)]-x_[j+(n_-1)*(m_+1)]); // D-
+
+	// Old low accuracy one-sided expressions
+	// for(int j=0; j<=m_; j++){   // fixes borders (first and last column)
+	// 	ux(0,j) =  (u(1,j) - u(0,j))/(x_[j+(1)*(m_+1)]-x_[j+(0)*(m_+1)]); // D+
+	// 	ux(n_,j) = (u(n_,j) - u(n_-1,j))/(x_[j+(n_)*(m_+1)]-x_[j+(n_-1)*(m_+1)]); // D-
+	// }
+
+	// NEW one-sided expression
+	for(int j=0; j<=m_; j++){  
+		double h1 = x_[j+(1)*(m_+1)] - x_[j+(0)*(m_+1)];
+		double h2 = x_[j+(2)*(m_+1)] - x_[j+(0)*(m_+1)];
+		ux(0,j) = (-u(0,j)*(h2*h2-h1*h1) + h2*h2*u(1,j) - h1*h1*u(2,j))/(h1*h2*(h2-h1));
+
+		double hn1 = x_[j+(n_)*(m_+1)] - x_[j+(n_-1)*(m_+1)];
+		double hn2 = x_[j+(n_)*(m_+1)] - x_[j+(n_-2)*(m_+1)];
+		ux(n_,j) = (-u(n_,j)*(hn2*hn2-hn1*hn1) + hn2*hn2*u(n_-1,j) - hn1*hn1*u(n_-2,j))/(hn1*hn2*(hn1-hn2));
 	}
 	FILE *fil;
 	fil = fopen(fname,"wb");
@@ -122,11 +134,26 @@ void GFkt::Dy(const char* fname){
 			uy(i,j) = (u(i,j+1) - u(i,j-1))/(y_[(j+1)+i*(m_+1)]-y_[(j-1)+i*(m_+1)]);
 		}
 	}
-	for(int i=0; i<=n_; i++){   // fixes borders (first and last row)
-		// one sides expressions // Better expressions should be use for improved accuracy
-		uy(i,0) =  (u(i,1) - u(i,0))/(y_[1+(i)*(m_+1)]-y_[0+(i)*(m_+1)]); // D+
-		uy(i,m_) = (u(i,m_) - u(i,m_-1))/(y_[m_+(i)*(m_+1)]-y_[(m_-1)+(i)*(m_+1)]); // D-
+
+
+	// Old low accuracy one-sided expressions
+	// for(int i=0; i<=n_; i++){   // fixes borders (first and last row)
+	// 	uy(i,0) =  (u(i,1) - u(i,0))/(y_[1+(i)*(m_+1)]-y_[0+(i)*(m_+1)]); // D+
+	// 	uy(i,m_) = (u(i,m_) - u(i,m_-1))/(y_[m_+(i)*(m_+1)]-y_[(m_-1)+(i)*(m_+1)]); // D-
+	// }
+
+	// NEW one-sided expression
+	for(int i=0; i<=n_; i++){  
+	double h1 = y_[1+i*(m_+1)] - y_[0+i*(m_+1)];
+	double h2 = y_[2+i*(m_+1)] - y_[0+i*(m_+1)];
+	uy(i,0) = (-u(i,0)*(h2*h2-h1*h1) + h2*h2*u(i,1) - h1*h1*u(i,2))/(h1*h2*(h2-h1));
+
+	double hn1 = y_[m_+i*(m_+1)] - y_[(m_-1)+i*(m_+1)];
+	double hn2 = y_[m_+i*(m_+1)] - y_[(m_-2)+i*(m_+1)];
+	uy(i,m_) = (-u(i,m_)*(hn2*hn2-hn1*hn1) + hn2*hn2*u(i,m_-1) - hn1*hn1*u(i,m_-2))/(hn1*hn2*(hn1-hn2));
 	}
+
+
 	FILE *fil;
 	fil = fopen(fname,"wb");
 	fwrite(uy.getMatrix(),sizeof(double),(n_+1)*(m_+1),fil);
@@ -141,7 +168,7 @@ void GFkt::Laplacian(const char* fname){
 	double* x_ = grid->xvector();
 	double* y_ = grid->yvector();   
 
-	for(int i=2; i<=n_-1; i++){   // from i=2 to i=48 i.e. borders = 0.0
+	for(int i=1; i<=n_-1; i++){   // from i=2 to i=48 i.e. borders = 0.0
 		for(int j=0; j<=m_; j++){ 	// no borders.
 			//L(i,j) = (-4*u(i,j) + u(i+1,j) + u(i-1,j) + u(i,j+1) + u(i,j-1)); // just to try.
 			uxx(i,j) = (ux(i+1,j)-ux(i-1,j))/(x_[j+(i+1)*(m_+1)]-x_[j+(i-1)*(m_+1)]);
@@ -156,26 +183,35 @@ void GFkt::Laplacian(const char* fname){
 	 // Not nice code, but sufficient for serving as a test.
 	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first, second and last column (for uxx).
 
-		for(int i=0; i<=1; i++){ 
-			double x0 = x_[j+(i+0)*(m_+1)];
-			double x1 = x_[j+(i+1)*(m_+1)];
-			double x2 = x_[j+(i+2)*(m_+1)];
-			double u0 = u(i+0,j);
-			double u1 = u(i+1,j);
-			double u2 = u(i+2,j);
+		// NEW One-sided expression
+		double h1 = x_[j+(1)*(m_+1)] - x_[j+(0)*(m_+1)];
+		double h2 = x_[j+(2)*(m_+1)] - x_[j+(0)*(m_+1)];
+		uxx(0,j) = 2*(-ux(0,j)*(h1*h2*h2*h2 - h2*h1*h1*h1) -u(0,j)*(h2*h2*h2-h1*h1*h1) + h2*h2*h2*u(1,j) - h1*h1*h1*u(2,j)) / (h1*h1*h2*h2*(h2-h1));
 
-			uxx(i,j) =  2*(-u0*(x2-x1)+u1*(x2-x0)-u2*(x1-x0))/((x2-x0)*(x1-x0)*(x1-x2));
-		}
-		for(int i=n_; i<= n_; i++){
-			double xm = x_[j+(i+0)*(m_+1)];
-			double xm1 = x_[j+(i-1)*(m_+1)];
-			double xm2 = x_[j+(i-2)*(m_+1)];
-			double um = u(i-0,j);
-			double um1 = u(i-1,j);
-			double um2 = u(i-2,j);
 
-			uxx(i,j) =  2*(-um*(xm1-xm2)+um1*(xm-xm2)-um2*(xm-xm1))/((xm-xm2)*(xm-xm1)*(xm2-xm1));
-		}
+		// int i=0;
+		// double x0 = x_[j+(i+0)*(m_+1)];
+		// double x1 = x_[j+(i+1)*(m_+1)];
+		// double x2 = x_[j+(i+2)*(m_+1)];
+		// double u0 = u(i+0,j);
+		// double u1 = u(i+1,j);
+		// double u2 = u(i+2,j);
+
+		// uxx(i,j) =  2*(-u0*(x2-x1)+u1*(x2-x0)-u2*(x1-x0))/((x2-x0)*(x1-x0)*(x1-x2));
+
+
+
+		
+		int i = n_;
+		double xm = x_[j+(i+0)*(m_+1)];
+		double xm1 = x_[j+(i-1)*(m_+1)];
+		double xm2 = x_[j+(i-2)*(m_+1)];
+		double um = u(i-0,j);
+		double um1 = u(i-1,j);
+		double um2 = u(i-2,j);
+
+		uxx(i,j) =  2*(-um*(xm1-xm2)+um1*(xm-xm2)-um2*(xm-xm1))/((xm-xm2)*(xm-xm1)*(xm2-xm1));
+		
 	}
 
 
