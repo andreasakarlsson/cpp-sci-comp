@@ -39,7 +39,7 @@ The Domain class is given a few new short methods to enable access to variables 
 
 \subsection*{Task 2 - GFkt class}
 
-The GFkt class holds two important objects. A Domain object that describes the grid and a matrix object that contain function values of a functon fp on the grid. Apart from the basic structure with constructor/copy-constructor etc. the GFkt class contains methods to perform basic (point-wise) aritmetic operation on the matrix containign the function values. Finaly the class have methods for calculating approximative discrete partial derivatives. \\
+The GFkt class holds two important objects. A Domain object that describes the grid and a matrix object that contain function values of a function fp on the grid. Apart from the basic structure with constructor/copy-constructor etc. the GFkt class contains methods to perform basic (point-wise) arithmetic operation on the matrix containing the function values. Finally the class have methods for calculating approximative discrete partial derivatives. \\
 
 The first partial derivatives in $x$ and $y$ are calculated as.
 
@@ -49,13 +49,13 @@ These are central derivatives that yield good accuracy, but they cannot be appli
 
 $$ \frac{\partial}{\partial x} u(x_i,y_j)  = \frac{u(x_{i+1},y_j)-u(x_{i},y_j)}{x_{i+1} - x_{i}} \qquad  \frac{\partial}{\partial y} u(x_i,y_j)  = \frac{u(x_{i},y_{j+1})-u(x_{i},y_{j})}{y_{j+1} - y_{j}}$$
 
-This would be for the first column and first row respectivley. The one-sided derivatives have lower accuracy compared to the central derivatives (see section 3). We therefore derive two a simple expression for a one-sides approximate derivative on a non equidistant grid with Talyor expansion. 
+This would be for the first column and first row respectively. The one-sided derivatives have lower accuracy compared to the central derivatives (see section 3). We therefore derive two a simple expression for a one-sides approximate derivative on a non equidistant grid with Taylor expansion. 
 
 
-$$u(x+h_1) = u(x) + u'(x)\cdot h_1 \frac{1}{2}u''(x)\cdot h_1^2 + \mathcal{O}(h^3)$$
-$$u(x+h_2) = u(x) + u'(x)\cdot h_2 \frac{1}{2}u''(x)\cdot h_2^2 + \mathcal{O}(h^3)$$
+$$u(x+h_1) = u(x) + u'(x)\cdot h_1 + \frac{1}{2}u''(x)\cdot h_1^2 + \mathcal{O}(h^3)$$
+$$u(x+h_2) = u(x) + u'(x)\cdot h_2 + \frac{1}{2}u''(x)\cdot h_2^2 + \mathcal{O}(h^3)$$
 
-Multiply first equation with $h_2^2$ and the second with $-h_1^2$. The sum is then
+Multiply first equation with $h_2^2$ and the second with $-h_1^2$. The sum is them:
 
 $$ h_2^2 u(x+h_1)  - h_1^2 u(x+h_2)  = u(x) (h_2^2 - h_1^2 ) + u'(x) (h_1 h_2^2 - h_2 h_ 1^2) +  \mathcal{O}(h^3) $$
 
@@ -63,14 +63,28 @@ We neglect the higher order terms and solve for $u'(x)$
 
 $$  u'(x) = \frac{- u(x) (h_2^2 - h_1^2 ) + h_2^2 u(x+h_1)  - h_1^2 u(x+h_2) }{h_1 h_2^2 - h_2 h_ 1^2}  $$
 
-This approximation is marginally more complicated but gives much high accuracy. \\
+This 3-stencil approximation is marginally more complicated but gives much high accuracy. \\
 
 
 For the Laplacian, $\Delta$, we can use a similar approach. The laplacian of a function $u(x,y) $ is simply $\frac{\partial^2}{\partial x^2} u(x,y) + \frac{\partial^2}{\partial y^2} u(x,y) $. The two second order derivatives can be calculated separately and then added together. Each second order derivative is calculated with a central difference. 
 
 $$ \frac{\partial^2}{\partial x^2} u(x_i,y_j)  = \frac{u_x(x_{i+1},y_j)-u_x(x_{i-1},y_j)}{x_{i+1} - x_{i-1}} \qquad  \frac{\partial^2}{\partial y^2} u(x_i,y_j)  = \frac{u_y(x_{i},y_{j+1})-u_y(x_{i},y_{j-1})}{y_{j+1} - y_{j-1}}$$ 
 
-where the only difference from the first order derivatives is that here the first order derivative is the input instead of the function. Also here we get the problem with border values and one-sided derivatives derived with Taylor expansion are used again.
+where the only difference from the first order derivatives is that here the first order derivative is the input instead of the function. Also here we get the problem with border values and one-sided derivatives derived with Taylor expansion are used again. This time however we use a 4-stencil to achieve enough accuracy.
+
+$$u(x+h_1) = u(x) + u'(x)\cdot h_1 + \frac{1}{2}u''(x)\cdot h_1^2 + \frac{1}{6}u'''(x)\cdot h_1^3 + \mathcal{O}(h^4)$$
+$$u(x+h_2) = u(x) + u'(x)\cdot h_2 + \frac{1}{2}u''(x)\cdot h_2^2 + \frac{1}{6}u'''(x)\cdot h_2^3 + \mathcal{O}(h^4)$$
+$$u(x+h_3) = u(x) + u'(x)\cdot h_3 + \frac{1}{2}u''(x)\cdot h_3^2 + \frac{1}{6}u'''(x)\cdot h_3^3 + \mathcal{O}(h^4)$$
+
+We eliminate the first order and third order derivatives, neglect the high order terms and solve for the second order derivative. After some simple, but somewhat lengthy algebraic manipulations we get
+
+\begin{align*}
+u''(x) &= 2\cdot [ -u(x)((h_3^3 - h_1^3)(h_2h_3^3 - h_3h_2^3)-(h_3^3-h_2^3)(h_1h_3^3-h_3h_1^3))  \\
+& + (h_2h_3^3 - h_3h_2^3)(h_3^3u(x+h_1)-h_1^3u(x+h_3))  - (h_1h_3^3 - h_3h_1^3 )(h_3^3 u(x+h_2) -h_2^3 u(x+h_3)) ]\\
+&  /  [(h_1^2 h_3^3 - h_3^2 h_1^3 )(h_2 h_3^3 - h_3 h_2^3 )-( h_2^2 h_3^3 - h_3^2 h_2^3 )(h_1 h_3^3 - h_3 h_1^3) ]
+\end{align*}
+
+This expression gives a reasonable accuracy (depends on application of course).
 
 
 
@@ -155,11 +169,15 @@ subplot(1,3,3); plot(x,dxxu);
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{algebraicDeriv.pdf}
+  \includegraphics[width=0.8\textwidth]{algebraicDeriv.pdf}
   \caption{\small Plot of algebraic expressions: (a) x-component of $u(x,y)$. (b) First partial derivative of $u(x,y)$ in x. (c) Second partial derivative of $u(x,y)$ in x.\label{fig:algebraic}}
 \end{figure}
 
-With the approximative derivatives implemented in task 2 we can now plot the algebraic derivatives alongside the C++ approxiamtions (Fig \ref{fig:1derivX} and \ref{fig:2derivX}). The difference between the curves is shown in blue visualize the error. We not with no surprise that the approximatice derivatives have a good arrgreement with the algebratic derivatigves in all places except the borders.
+With the approximative derivatives implemented in task 2 we can now plot the algebraic derivatives alongside the C++ approximations (Fig \ref{fig:1derivX} and \ref{fig:2derivX}). The error is shown in blue and defined as. 
+
+$$\textrm{relative error} = 2\cdot \frac{u_\textrm{algebr} - u_\textrm{approx}}{u_\textrm{algebr} + u_\textrm{approx}}$$
+
+We note with no surprise that the approximative derivatives have a good agreement with the algebraic derivatives in all places except the borders. The relative error is however almost always lower than one percent.
 
 
 \begin{figure}[H]
