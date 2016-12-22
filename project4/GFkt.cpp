@@ -183,59 +183,123 @@ void GFkt::Laplacian(const char* fname){
 	 // Not nice code, but sufficient for serving as a test.
 	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first, second and last column (for uxx).
 
-		// NEW One-sided expression
+		// high accuracy test (4-stencil)
+		int i = 0;
+		double u0 = u(i+0,j);
+		double u1 = u(i+1,j);
+		double u2 = u(i+2,j);
+		double u3 = u(i+3,j);
 		double h1 = x_[j+(1)*(m_+1)] - x_[j+(0)*(m_+1)];
 		double h2 = x_[j+(2)*(m_+1)] - x_[j+(0)*(m_+1)];
-		uxx(0,j) = 2*(-ux(0,j)*(h1*h2*h2*h2 - h2*h1*h1*h1) -u(0,j)*(h2*h2*h2-h1*h1*h1) + h2*h2*h2*u(1,j) - h1*h1*h1*u(2,j)) / (h1*h1*h2*h2*(h2-h1));
+		double h3 = x_[j+(3)*(m_+1)] - x_[j+(0)*(m_+1)];
+
+		uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
+		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
+		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
 
 
-		// int i=0;
-		// double x0 = x_[j+(i+0)*(m_+1)];
-		// double x1 = x_[j+(i+1)*(m_+1)];
-		// double x2 = x_[j+(i+2)*(m_+1)];
-		// double u0 = u(i+0,j);
-		// double u1 = u(i+1,j);
-		// double u2 = u(i+2,j);
+		// i = 1;
+		// u0 = u(i+0,j);
+		// u1 = u(i+1,j);
+		// u2 = u(i+2,j);
+		// u3 = u(i+3,j);
+		// h1 = x_[j+(i+1)*(m_+1)] - x_[j+(i+0)*(m_+1)];
+		// h2 = x_[j+(i+2)*(m_+1)] - x_[j+(i+0)*(m_+1)];
+		// h3 = x_[j+(i+3)*(m_+1)] - x_[j+(i+0)*(m_+1)];
 
-		// uxx(i,j) =  2*(-u0*(x2-x1)+u1*(x2-x0)-u2*(x1-x0))/((x2-x0)*(x1-x0)*(x1-x2));
+		// uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
+		// + (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
+		// /((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
 
 
+
+		// New high accuracy one-sided expression
+		i = n_;
+		u0 = u(i-0,j);
+		u1 = u(i-1,j);
+		u2 = u(i-2,j);
+		u3 = u(i-3,j);
+		h1 = x_[j+(i-1)*(m_+1)] - x_[j+(i-0)*(m_+1)];
+		h2 = x_[j+(i-2)*(m_+1)] - x_[j+(i-0)*(m_+1)];
+		h3 = x_[j+(i-3)*(m_+1)] - x_[j+(i-0)*(m_+1)];
+
+		uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
+		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
+		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
 
 		
-		int i = n_;
-		double xm = x_[j+(i+0)*(m_+1)];
-		double xm1 = x_[j+(i-1)*(m_+1)];
-		double xm2 = x_[j+(i-2)*(m_+1)];
-		double um = u(i-0,j);
-		double um1 = u(i-1,j);
-		double um2 = u(i-2,j);
 
-		uxx(i,j) =  2*(-um*(xm1-xm2)+um1*(xm-xm2)-um2*(xm-xm1))/((xm-xm2)*(xm-xm1)*(xm2-xm1));
+		// New high accuracy one-sided expression
+		i = n_-1;
+		u0 = u(i-0,j);
+		u1 = u(i-1,j);
+		u2 = u(i-2,j);
+		u3 = u(i-3,j);
+		h1 = x_[j+(i-1)*(m_+1)] - x_[j+(i-0)*(m_+1)];
+		h2 = x_[j+(i-2)*(m_+1)] - x_[j+(i-0)*(m_+1)];
+		h3 = x_[j+(i-3)*(m_+1)] - x_[j+(i-0)*(m_+1)];
+
+		uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
+		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
+		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
+
 		
 	}
 
 
 	for(int i=0; i<=n_; i++){   // one sided expression supposed to fix first and last row (for uyy).
 
+
+		// New high accuracy one-sided expression
 		int j = 0;
-		double y0 = y_[(j+0)+i*(m_+1)];
-		double y1 = y_[(j+1)+i*(m_+1)];
-		double y2 = y_[(j+2)+i*(m_+1)];
 		double u0 = u(i,j+0);
 		double u1 = u(i,j+1);
 		double u2 = u(i,j+2);
+		double u3 = u(i,j+3);
+		double h1 = y_[1+i*(m_+1)] - y_[0+i*(m_+1)];
+		double h2 = y_[2+i*(m_+1)] - y_[0+i*(m_+1)];
+		double h3 = y_[3+i*(m_+1)] - y_[0+i*(m_+1)];
 
-		uyy(i,j) =  2*(-u0*(y2-y1)+u1*(y2-y0)-u2*(y1-y0))/((y2-y0)*(y1-y0)*(y1-y2));
+		uyy(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
+		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
+		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
 
+
+		// int j = 0;
+		// double y0 = y_[(j+0)+i*(m_+1)];
+		// double y1 = y_[(j+1)+i*(m_+1)];
+		// double y2 = y_[(j+2)+i*(m_+1)];
+		// double u0 = u(i,j+0);
+		// double u1 = u(i,j+1);
+		// double u2 = u(i,j+2);
+
+		// uyy(i,j) =  2*(-u0*(y2-y1)+u1*(y2-y0)-u2*(y1-y0))/((y2-y0)*(y1-y0)*(y1-y2));
+
+		
+		// New high accuracy one-sided expression
 		j = m_;
-		double yn  = y_[(j-0)+i*(m_+1)];
-		double yn1 = y_[(j-1)+i*(m_+1)];
-		double yn2 = y_[(j-2)+i*(m_+1)];
-		double un = u(i,j-0);
-		double un1 = u(i,j-1);
-		double un2 = u(i,j-2);
+		u0 = u(i,j-0);
+		u1 = u(i,j-1);
+		u2 = u(i,j-2);
+		u3 = u(i,j-3);
+		h1 = y_[(j-1)+i*(m_+1)] - y_[(j-0)+i*(m_+1)];
+		h2 = y_[(j-2)+i*(m_+1)] - y_[(j-0)+i*(m_+1)];
+		h3 = y_[(j-3)+i*(m_+1)] - y_[(j-0)+i*(m_+1)];
 
-		uyy(i,j) =  2*(-un*(yn1-yn2)+un1*(yn-yn2)-un2*(yn-yn1))/((yn-yn2)*(yn-yn1)*(yn2-yn1));
+		uyy(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
+		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
+		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
+
+
+		// j = m_;
+		// double yn  = y_[(j-0)+i*(m_+1)];
+		// double yn1 = y_[(j-1)+i*(m_+1)];
+		// double yn2 = y_[(j-2)+i*(m_+1)];
+		// double un = u(i,j-0);
+		// double un1 = u(i,j-1);
+		// double un2 = u(i,j-2);
+
+		// uyy(i,j) =  2*(-un*(yn1-yn2)+un1*(yn-yn2)-un2*(yn-yn1))/((yn-yn2)*(yn-yn1)*(yn2-yn1));
 
 	}
 
