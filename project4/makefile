@@ -1,6 +1,13 @@
 CPP=g++
 CPPFLAGS=-g -Wall -std=c++11
 
+
+ifeq ($(OS),Windows_NT)
+    RM=del -f
+else
+    RM=rm -f
+endif
+
 all: run
 
 build:
@@ -18,4 +25,4 @@ run: build
 	./p4
 
 clean:
-		del -f p4.exe *.bin
+	$(RM) p4.exe *.bin
