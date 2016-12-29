@@ -1,7 +1,10 @@
 #ifndef DOMAIN_H
 #define DOMAIN_H
 
+
 #include "Curvebase.h"
+
+//using namespace std;
 
 class Domain {
 
@@ -60,5 +63,6 @@ class Domain {
   inline double phi2(double w);
   
   double *x_,*y_;
+
 };
 #endif
