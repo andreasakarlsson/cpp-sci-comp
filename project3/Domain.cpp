@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <cstdio>
+#include <memory>   // for shared_ptr
 #include "Curvebase.h"
 #include "Domain.h"
 using namespace std;
@@ -108,23 +109,23 @@ void Domain::generate_grid(int n, int m, bool stretch){
   for(int i = 0; i <= n_; i++){
     for(int j = 0; j <= m_; j++){
       x_[j+i*(m_+1)] = phi1(i*h1)*x_j_s3[j]
-	+ phi2(i*h1)*x_j_s1[j]
-	+ phi1(j*h2)*x_i_s0[i]
-	+ phi2(j*h2)*x_i_s2[i]
-	- phi1(i*h1)*phi1(j*h2)*s0x0
-	- phi2(i*h1)*phi1(j*h2)*s1x0
-	- phi1(i*h1)*phi2(j*h2)*s3x1
-	- phi2(i*h1)*phi2(j*h2)*s2x1;
+  	+ phi2(i*h1)*x_j_s1[j]
+  	+ phi1(j*h2)*x_i_s0[i]
+  	+ phi2(j*h2)*x_i_s2[i]
+  	- phi1(i*h1)*phi1(j*h2)*s0x0
+  	- phi2(i*h1)*phi1(j*h2)*s1x0
+  	- phi1(i*h1)*phi2(j*h2)*s3x1
+  	- phi2(i*h1)*phi2(j*h2)*s2x1;
 
 
       y_[j+i*(m_+1)] = phi1(i*h1)*y_j_s3[j]
-	+ phi2(i*h1)*y_j_s1[j]
-	+ phi1(j*h2)*y_i_s0[i]
-	+ phi2(j*h2)*y_i_s2[i]
-	- phi1(i*h1)*phi1(j*h2)*s0y0
-	- phi2(i*h1)*phi1(j*h2)*s1y0
-	- phi1(i*h1)*phi2(j*h2)*s3y1
-	- phi2(i*h1)*phi2(j*h2)*s2y1;
+  	+ phi2(i*h1)*y_j_s1[j]
+  	+ phi1(j*h2)*y_i_s0[i]
+  	+ phi2(j*h2)*y_i_s2[i]
+  	- phi1(i*h1)*phi1(j*h2)*s0y0
+  	- phi2(i*h1)*phi1(j*h2)*s1y0
+  	- phi1(i*h1)*phi2(j*h2)*s3y1
+  	- phi2(i*h1)*phi2(j*h2)*s2y1;
 
     }
   }

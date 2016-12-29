@@ -18,7 +18,7 @@ using namespace std;
 GFkt::GFkt(shared_ptr<Domain> grid_) : u(grid_->xsize()+1,grid_->ysize()+1,0.0), 
 	ux(grid_->xsize()+1,grid_->ysize()+1,0.0), 
 	uy(grid_->xsize()+1,grid_->ysize()+1,0.0),
-	L(grid_->xsize()+1,grid_->ysize()+1,0.0),grid(grid_) {}
+	L(grid_->xsize()+1,grid_->ysize()+1,0.0), grid(grid_) {}
 
 // copy constructor
 GFkt::GFkt(const GFkt& U) : u(U.u), ux(U.ux), uy(U.uy), L(U.L), grid(U.grid) {}
@@ -46,7 +46,7 @@ GFkt GFkt::operator-(const GFkt& U) const {
 		tmp.u = u - U.u; 
 		return tmp;
 	}
-	else cout << "error" << endl; // give error somehow
+	else cout << "error: not same grid" << endl; // give error somehow
 	abort();
 }
 
@@ -59,7 +59,7 @@ GFkt GFkt::operator*(const GFkt& U) const {
 				tmp.u(i,j) = u(i,j)*U.u(i,j);
 		return tmp;
 	}
-	else cout << "error" << endl; // give error somehow
+	else cout << "error: not same grid" << endl; // give error somehow
 	abort();
 }
 
@@ -93,6 +93,7 @@ void GFkt::save2file(const char* fname){
 
 // D0x Partial derivative
 void GFkt::Dx(const char* fname){
+	//ux = MatrixNEW(grid_->xsize()+1,grid_->ysize()+1,0.0); 
 	int n_ = grid->xsize(); int m_ = grid->ysize(); 
 	//MatrixNEW Dx(n_+1,m_+1,0.0);  // size 50 x 20
 	double* x_ = grid->xvector();
@@ -101,12 +102,6 @@ void GFkt::Dx(const char* fname){
 			ux(i,j) = (u(i+1,j) - u(i-1,j))/(x_[j+(i+1)*(m_+1)]-x_[j+(i-1)*(m_+1)]); 
 		}
 	}
-
-	// Old low accuracy one-sided expressions
-	// for(int j=0; j<=m_; j++){   // fixes borders (first and last column)
-	// 	ux(0,j) =  (u(1,j) - u(0,j))/(x_[j+(1)*(m_+1)]-x_[j+(0)*(m_+1)]); // D+
-	// 	ux(n_,j) = (u(n_,j) - u(n_-1,j))/(x_[j+(n_)*(m_+1)]-x_[j+(n_-1)*(m_+1)]); // D-
-	// }
 
 	// NEW one-sided expression
 	for(int j=0; j<=m_; j++){  
@@ -126,6 +121,7 @@ void GFkt::Dx(const char* fname){
 
 // D0y Partial derivative
 void GFkt::Dy(const char* fname){
+	//uy = MatrixNEW(grid_->xsize()+1,grid_->ysize()+1,0.0); 
 	int n_ = grid->xsize(); int m_ = grid->ysize();
 	//MatrixNEW Dy(n_+1,m_+1,0.0);  // size 50 x 20
 	double* y_ = grid->yvector();
@@ -134,13 +130,6 @@ void GFkt::Dy(const char* fname){
 			uy(i,j) = (u(i,j+1) - u(i,j-1))/(y_[(j+1)+i*(m_+1)]-y_[(j-1)+i*(m_+1)]);
 		}
 	}
-
-
-	// Old low accuracy one-sided expressions
-	// for(int i=0; i<=n_; i++){   // fixes borders (first and last row)
-	// 	uy(i,0) =  (u(i,1) - u(i,0))/(y_[1+(i)*(m_+1)]-y_[0+(i)*(m_+1)]); // D+
-	// 	uy(i,m_) = (u(i,m_) - u(i,m_-1))/(y_[m_+(i)*(m_+1)]-y_[(m_-1)+(i)*(m_+1)]); // D-
-	// }
 
 	// NEW one-sided expression
 	for(int i=0; i<=n_; i++){  
@@ -180,10 +169,9 @@ void GFkt::Laplacian(const char* fname){
 		}
 	}
 
-	 // Not nice code, but sufficient for serving as a test.
-	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first, second and last column (for uxx).
+	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first and last column (for uxx).
 
-		// high accuracy test (4-stencil)
+		// (4-stencil)
 		int i = 0;
 		double u0 = u(i+0,j);
 		double u1 = u(i+1,j);
@@ -197,23 +185,6 @@ void GFkt::Laplacian(const char* fname){
 		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
 		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
 
-
-		// i = 1;
-		// u0 = u(i+0,j);
-		// u1 = u(i+1,j);
-		// u2 = u(i+2,j);
-		// u3 = u(i+3,j);
-		// h1 = x_[j+(i+1)*(m_+1)] - x_[j+(i+0)*(m_+1)];
-		// h2 = x_[j+(i+2)*(m_+1)] - x_[j+(i+0)*(m_+1)];
-		// h3 = x_[j+(i+3)*(m_+1)] - x_[j+(i+0)*(m_+1)];
-
-		// uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
-		// + (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
-		// /((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
-
-
-
-		// New high accuracy one-sided expression
 		i = n_;
 		u0 = u(i-0,j);
 		u1 = u(i-1,j);
@@ -226,31 +197,11 @@ void GFkt::Laplacian(const char* fname){
 		uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
 		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
 		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
-
-		
-
-		// New high accuracy one-sided expression
-		i = n_-1;
-		u0 = u(i-0,j);
-		u1 = u(i-1,j);
-		u2 = u(i-2,j);
-		u3 = u(i-3,j);
-		h1 = x_[j+(i-1)*(m_+1)] - x_[j+(i-0)*(m_+1)];
-		h2 = x_[j+(i-2)*(m_+1)] - x_[j+(i-0)*(m_+1)];
-		h3 = x_[j+(i-3)*(m_+1)] - x_[j+(i-0)*(m_+1)];
-
-		uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
-		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
-		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
-
 		
 	}
 
-
 	for(int i=0; i<=n_; i++){   // one sided expression supposed to fix first and last row (for uyy).
 
-
-		// New high accuracy one-sided expression
 		int j = 0;
 		double u0 = u(i,j+0);
 		double u1 = u(i,j+1);
@@ -263,20 +214,7 @@ void GFkt::Laplacian(const char* fname){
 		uyy(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
 		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
 		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
-
-
-		// int j = 0;
-		// double y0 = y_[(j+0)+i*(m_+1)];
-		// double y1 = y_[(j+1)+i*(m_+1)];
-		// double y2 = y_[(j+2)+i*(m_+1)];
-		// double u0 = u(i,j+0);
-		// double u1 = u(i,j+1);
-		// double u2 = u(i,j+2);
-
-		// uyy(i,j) =  2*(-u0*(y2-y1)+u1*(y2-y0)-u2*(y1-y0))/((y2-y0)*(y1-y0)*(y1-y2));
-
 		
-		// New high accuracy one-sided expression
 		j = m_;
 		u0 = u(i,j-0);
 		u1 = u(i,j-1);
@@ -290,19 +228,7 @@ void GFkt::Laplacian(const char* fname){
 		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
 		/((h1*h1*h3*h3*h3 - h3*h3*h1*h1*h1) * (h2*h3*h3*h3 - h3*h2*h2*h2) - (h2*h2*h3*h3*h3 - h3*h3*h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1));
 
-
-		// j = m_;
-		// double yn  = y_[(j-0)+i*(m_+1)];
-		// double yn1 = y_[(j-1)+i*(m_+1)];
-		// double yn2 = y_[(j-2)+i*(m_+1)];
-		// double un = u(i,j-0);
-		// double un1 = u(i,j-1);
-		// double un2 = u(i,j-2);
-
-		// uyy(i,j) =  2*(-un*(yn1-yn2)+un1*(yn-yn2)-un2*(yn-yn1))/((yn-yn2)*(yn-yn1)*(yn2-yn1));
-
 	}
-
 
 	L = uxx + uyy;
 
