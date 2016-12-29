@@ -23,7 +23,7 @@ double u(double x, double y){
 int main() {
 
 
-	curvStraight A(-10,5,0,0); // For initial test use lower boundry that is straight
+	curvStraight A(-10,5,0,0); // For initial test use lower boundary that is straight
 	curvStraight B(0,3,1,5);
 	curvStraight C(-10,5,0,3);
 	curvStraight D(0,3,1,-10);
