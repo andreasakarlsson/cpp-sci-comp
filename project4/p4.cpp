@@ -34,17 +34,17 @@ int main() {
 
 	GFkt GA(Grid);
 
-
 	double (*fp)(double,double) = u;  // function pointer to u()
 
   	GA.setfunction(fp);
 
   	GA.save2file("task3-1.bin");
 
-  	GA.Dx("task3-2.bin");
-  	GA.Dy("task3-3.bin");
+	GA.Dx("task3-2.bin");
 
-  	GA.Laplacian("task3-4.bin");
+	GA.Dy("task3-3.bin");
+
+	GA.Laplacian("task3-4.bin");
 
 	return 0;
 }

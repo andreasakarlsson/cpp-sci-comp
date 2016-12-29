@@ -34,7 +34,7 @@
 \section*{Project 4}
 \subsection*{Task 1 - Redesign Domain class}
 
-The Domain class is given a few new short methods to enable access to variables from the outside.\\
+The Domain class is given a few new short methods to enable access to variables from the outside. It is moreover slit upp in a source file and header file.\\
 
 
 \subsection*{Task 2 - GFkt class}
@@ -49,13 +49,13 @@ These are central derivatives that yield good accuracy, but they cannot be appli
 
 $$ \frac{\partial}{\partial x} u(x_i,y_j)  = \frac{u(x_{i+1},y_j)-u(x_{i},y_j)}{x_{i+1} - x_{i}} \qquad  \frac{\partial}{\partial y} u(x_i,y_j)  = \frac{u(x_{i},y_{j+1})-u(x_{i},y_{j})}{y_{j+1} - y_{j}}$$
 
-This would be for the first column and first row respectively. The one-sided derivatives have lower accuracy compared to the central derivatives (see section 3). We therefore derive two a simple expression for a one-sides approximate derivative on a non equidistant grid with Taylor expansion. 
+This would be for the first column and first row respectively. The one-sided derivatives have lower accuracy compared to the central derivatives. We therefore derive two a simple expression for a one-sides approximate derivative on a nonequidistant grid with Taylor expansion. 
 
 
 $$u(x+h_1) = u(x) + u'(x)\cdot h_1 + \frac{1}{2}u''(x)\cdot h_1^2 + \mathcal{O}(h^3)$$
 $$u(x+h_2) = u(x) + u'(x)\cdot h_2 + \frac{1}{2}u''(x)\cdot h_2^2 + \mathcal{O}(h^3)$$
 
-Multiply first equation with $h_2^2$ and the second with $-h_1^2$. The sum is them:
+Multiply first equation with $h_2^2$ and the second with $-h_1^2$. Then sum is them:
 
 $$ h_2^2 u(x+h_1)  - h_1^2 u(x+h_2)  = u(x) (h_2^2 - h_1^2 ) + u'(x) (h_1 h_2^2 - h_2 h_ 1^2) +  \mathcal{O}(h^3) $$
 
@@ -66,7 +66,7 @@ $$  u'(x) = \frac{- u(x) (h_2^2 - h_1^2 ) + h_2^2 u(x+h_1)  - h_1^2 u(x+h_2) }{h
 This 3-stencil approximation is marginally more complicated but gives much high accuracy. \\
 
 
-For the Laplacian, $\Delta$, we can use a similar approach. The laplacian of a function $u(x,y) $ is simply $\frac{\partial^2}{\partial x^2} u(x,y) + \frac{\partial^2}{\partial y^2} u(x,y) $. The two second order derivatives can be calculated separately and then added together. Each second order derivative is calculated with a central difference. 
+For the Laplacian, $\Delta$, we can use a similar approach. The laplacian of a function $u(x,y) $ is simply $\frac{\partial^2}{\partial x^2} u(x,y) + \frac{\partial^2}{\partial y^2} u(x,y) $. The two second order derivatives can be calculated separately and then added together. Each second order derivative is calculated with a central difference, 
 
 $$ \frac{\partial^2}{\partial x^2} u(x_i,y_j)  = \frac{u_x(x_{i+1},y_j)-u_x(x_{i-1},y_j)}{x_{i+1} - x_{i-1}} \qquad  \frac{\partial^2}{\partial y^2} u(x_i,y_j)  = \frac{u_y(x_{i},y_{j+1})-u_y(x_{i},y_{j-1})}{y_{j+1} - y_{j-1}}$$ 
 
@@ -134,12 +134,13 @@ u(x,y) &= \sin\left(\left(\frac{x}{10}\right) ^2\right ) \cos(x/10)+y \\
 \frac{\partial}{\partial x} u(x,y) &= \frac{2}{100}x\cos\left(\left(\frac{x}{10}\right) ^2\right )\cos\left(\frac{x}{10}\right )- \frac{1}{10}\sin\left(\left(\frac{x}{10}\right) ^2\right )\sin\left (\frac{x}{10}\right )\\
 \frac{\partial}{\partial y} u(x,y) &= \frac{\partial}{\partial y}y = 1   \\
 \frac{\partial^2}{\partial x^2} u(x,y) &= \frac{2}{100}\cos\left(\left(\frac{x}{10}\right) ^2\right )\cos\left(\frac{x}{10}\right ) - \left ( \frac{2}{100}x\right )^2 \sin \left(\left(\frac{x}{10}\right) ^2\right )\cos\left(\frac{x}{10}\right ) \\
- &- \frac{2}{100}\frac{1}{10}x\cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left(\frac{x}{10}\right ) - \frac{1}{10}\frac{2}{100}x \cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left (\frac{x}{10}\right )\\
- & - \frac{1}{100}\sin\left(\left(\frac{x}{10}\right) ^2\right )\cos\left (\frac{x}{10}\right )\\
+ &- \frac{1}{250}x\cos\left(\left(\frac{x}{10}\right) ^2\right )\sin\left(\frac{x}{10}\right ) - \frac{1}{100}\sin\left(\left(\frac{x}{10}\right) ^2\right )\cos\left (\frac{x}{10}\right )\\
 \frac{\partial^2}{\partial y^2} u(x,y) &= 0 \\
 \Delta u(x,y) &= \frac{\partial^2}{\partial x^2} u(x,y) + \frac{\partial^2}{\partial y^2} u(x,y) =  \frac{\partial^2}{\partial x^2} u(x,y)
 \end{align*}
 
+
+\newpage
 
 The code below plot the algebraic expressions in \textsc{Matlab}. Figure \ref{fig:algebraic} shows the output.
 
@@ -170,14 +171,13 @@ subplot(1,3,3); plot(x,dxxu);
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{algebraicDeriv.pdf}
-  \caption{\small Plot of algebraic expressions: (a) x-component of $u(x,y)$. (b) First partial derivative of $u(x,y)$ in x. (c) Second partial derivative of $u(x,y)$ in x.\label{fig:algebraic}}
+  \caption{\small Plot of algebraic expressions in \textsc{Matlab}: (a) $x$-component of $u(x,y)$. (b) First partial derivative of $u(x,y)$ in $x$. (c) Second partial derivative of $u(x,y)$ in $x$.\label{fig:algebraic}}
 \end{figure}
 
-With the approximative derivatives implemented in task 2 we can now plot the algebraic derivatives alongside the C++ approximations (Fig \ref{fig:1derivX} and \ref{fig:2derivX}). The error is shown in blue and defined as. 
-
-$$\textrm{relative error} = 2\cdot \frac{u_\textrm{algebr} - u_\textrm{approx}}{u_\textrm{algebr} + u_\textrm{approx}}$$
-
-We note with no surprise that the approximative derivatives have a good agreement with the algebraic derivatives in all places except the borders. The relative error is however almost always lower than one percent.
+With the approximative derivatives implemented in task 2 we can now plot the algebraic derivatives alongside the C++ approximations (Fig \ref{fig:1derivX} and \ref{fig:2derivX}).
+% The error is shown in blue and defined as. 
+%$$\textrm{relative error} = 2\cdot \frac{u_\textrm{algebr} - u_\textrm{approx}}{u_\textrm{algebr} + u_\textrm{approx}}$$
+We note with no surprise that the approximative derivatives have a good agreement with the algebraic derivatives in all places except the borders. The agreement is so good that the green line showing the approximation is hard to discern from the red line. A blue error line with a separate axis is therefore shown. As stated above accuracy is not an absolute thing in real applications, but must be set in relation to something else.  
 
 
 \begin{figure}[H]
@@ -191,7 +191,7 @@ We note with no surprise that the approximative derivatives have a good agreemen
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{comparison-xx.pdf}
-  \caption{\small algebraic second order x-derivative (red), approximation (green), and error (blue).\label{fig:2derivX}}
+  \caption{\small algebraic second order x-derivative (red), approximation of Laplacian (green), and error (blue).\label{fig:2derivX}}
 \end{figure}
 
 
