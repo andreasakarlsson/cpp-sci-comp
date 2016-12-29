@@ -25,4 +25,4 @@ run: build
 	./p4
 
 clean:
-	$(RM) p4.exe *.bin
+	$(RM) p4.exe p4 *.bin
