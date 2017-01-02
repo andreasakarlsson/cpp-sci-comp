@@ -62,9 +62,9 @@ with the \texttt{cmath} \texttt{exp} function is within the set
 tolerance for low $x$ values. However for $x$ larger than 10 the error
 exceeds the set tolerance. This is because the type \texttt{double}
 cannot store data with high enough precision. A \texttt{double} can
-store about 15 digits. If the desiered error should be $10^{-10}$ then
+store about 15 digits. If the desired error should be $10^{-10}$ then
 the largest value that can be stored with this precision is
-$\sim 10^{5}$.
+$\sim 10^{5}$. There are libraries that can handle numbers with higher precision, e.g. boost or GMP, and thus circumvent this problem.
 
 
 \subsection{Task 2 - construct a matrix class.}
