@@ -7,11 +7,12 @@
 using namespace std;
 
 
-Domain::Domain (Curvebase& s1, Curvebase& s2, Curvebase& s3, Curvebase& s4){
-  sides[0] = &s1;
-  sides[1] = &s2;
-  sides[2] = &s3;
-  sides[3] = &s4;
+Domain::Domain (shared_ptr<Curvebase> s1, shared_ptr<Curvebase> s2, shared_ptr<Curvebase> s3, shared_ptr<Curvebase> s4){
+
+  sides[0] = s1;
+  sides[1] = s2;
+  sides[2] = s3;
+  sides[3] = s4;
 
   if(!check_consistency(1e-5)){
     sides[0] = sides[1] = sides[2] = sides[3] = nullptr;

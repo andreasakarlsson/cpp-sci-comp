@@ -5,6 +5,7 @@
 #include <stdlib.h>		// abort()
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 #include <memory>		// for shared_ptr
+#include <vector>
 
 #include "GFkt.h"
 #include "MatrixNEW.h"
@@ -23,10 +24,10 @@ double u(double x, double y){
 int main() {
 
 
-	curvStraight A(-10,5,0,0); // For initial test use lower boundary that is straight
-	curvStraight B(0,3,1,5);
-	curvStraight C(-10,5,0,3);
-	curvStraight D(0,3,1,-10);
+	std::shared_ptr<curvStraight> A =  make_shared<curvStraight>(-10,5,0,0);
+	std::shared_ptr<curvStraight> B =  make_shared<curvStraight>(0,3,1,5);
+	std::shared_ptr<curvStraight> C =  make_shared<curvStraight>(-10,5,0,3);
+	std::shared_ptr<curvStraight> D =  make_shared<curvStraight>(0,3,1,-10);
 
 	shared_ptr<Domain> Grid = make_shared<Domain>(A,B,C,D);
 	Grid->generate_grid(49,19,false);

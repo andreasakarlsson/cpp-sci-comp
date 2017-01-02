@@ -4,13 +4,11 @@
 
 #include "Curvebase.h"
 
-//using namespace std;
-
 class Domain {
 
  public:
   // Domain();
-  Domain(Curvebase&,Curvebase&,Curvebase&,Curvebase&);
+  Domain(std::shared_ptr<Curvebase> s1, std::shared_ptr<Curvebase> s2, std::shared_ptr<Curvebase> s3, std::shared_ptr<Curvebase> s4);
   virtual ~Domain();
   bool check_consistency(double epsilon = 1e-3);
   void generate_grid(int n, int m, bool stretch = false);
@@ -57,7 +55,9 @@ class Domain {
   double* yvector();
 
   private:
-  Curvebase* sides[4];
+  
+  std::shared_ptr<Curvebase> sides[4];
+  //Curvebase* sides[4];
 
   inline double phi1(double w);
   inline double phi2(double w);

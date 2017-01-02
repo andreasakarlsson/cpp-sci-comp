@@ -7,8 +7,6 @@
 #include "../project3/Curvebase.h"
 #include "../project3/curvStraight.h"
 
-using namespace std;
-
 class GFkt{
 
 private:
@@ -17,12 +15,12 @@ private:
 	MatrixNEW ux;
 	MatrixNEW uy;
 	MatrixNEW L;
-	shared_ptr<Domain> grid;
+	std::shared_ptr<Domain> grid;
 
 
 public:
 
-	GFkt(shared_ptr<Domain> grid_);
+	GFkt(std::shared_ptr<Domain> grid_);
 	GFkt(const GFkt& U);
 
 	GFkt& operator=(const GFkt& U);
