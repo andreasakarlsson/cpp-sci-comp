@@ -146,10 +146,24 @@ void Domain::save2file(const char* fname){
   fclose(fil);
 }
 
+// Get size of grid
 int Domain::xsize(){ return n_; }
 int Domain::ysize(){ return m_; }
+
 bool Domain::grid_valid() { return m_ != 0; }
 
+// access to x values
+double Domain::x(int i){
+    return x_[0+i*(m_+1)];
+}
+
+// access to y values
+double Domain::y(int j){
+    return y_[j+0*(m_+1)];
+}
+
+
+// access to x_ and y_ arrays
 double* Domain::xvector(){ return x_; }
 double* Domain::yvector(){ return y_; }
 

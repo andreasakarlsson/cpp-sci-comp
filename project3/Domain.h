@@ -51,6 +51,9 @@ class Domain {
   int ysize();
   bool grid_valid();
 
+  double x(int i);
+  double y(int i);
+
   double* xvector();
   double* yvector();
 

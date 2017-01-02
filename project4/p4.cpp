@@ -33,6 +33,10 @@ int main() {
 	Grid->generate_grid(49,19,false);
 	Grid->save2file("task1.bin");
 
+	// functions x() and y() to access x and y values of grid.
+	cout << " x(49) = " << Grid->x(49) << endl;
+	cout << " y(19) = " << Grid->y(19) << endl;
+
 	GFkt GA(Grid);
 
 	double (*fp)(double,double) = u;  // function pointer to u()
