@@ -4,6 +4,7 @@
 #include <cstdio>		// fopen etc
 #include <stdlib.h>		// abort()
 #include <memory>		// for shared_ptr
+#include <exception>
 
 #include "GFkt.h"
 #include "MatrixNEW.h"
@@ -36,7 +37,7 @@ GFkt GFkt::operator+(const GFkt& U) const {
 		return tmp;
 	}
 	else cout << "error" << endl; // give error somehow
-	abort();
+	throw std::exception();
 }
 
 // Subtraction
@@ -47,7 +48,7 @@ GFkt GFkt::operator-(const GFkt& U) const {
 		return tmp;
 	}
 	else cout << "error: not same grid" << endl; // give error somehow
-	abort();
+	throw std::exception();
 }
 
 // Pointwise multiplication
@@ -60,7 +61,7 @@ GFkt GFkt::operator*(const GFkt& U) const {
 		return tmp;
 	}
 	else cout << "error: not same grid" << endl; // give error somehow
-	abort();
+	throw std::exception();
 }
 
 // Multiplication by scalar

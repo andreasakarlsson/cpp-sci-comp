@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstdio>
 #include <memory>   // for shared_ptr
+#include <exception>
+
 #include "Curvebase.h"
 #include "Domain.h"
 using namespace std;
@@ -145,31 +147,6 @@ void Domain::save2file(const char* fname){
   fwrite(result,sizeof(double),2*sizeV,fil);
   fclose(fil);
 }
-
-// Get size of grid
-int Domain::xsize(){ return n_; }
-int Domain::ysize(){ return m_; }
-
-bool Domain::grid_valid() { return m_ != 0; }
-
-// access to x values
-double Domain::x(int i){
-    return x_[0+i*(m_+1)];
-}
-
-// access to y values
-double Domain::y(int j){
-    return y_[j+0*(m_+1)];
-}
-
-
-// access to x_ and y_ arrays
-double* Domain::xvector(){ return x_; }
-double* Domain::yvector(){ return y_; }
-
-
-inline double Domain::phi1(double w){ return 1.0 - w; }
-inline double Domain::phi2(double w){ return w; }
 
 Domain::~Domain(){
   if (n_ > 0){

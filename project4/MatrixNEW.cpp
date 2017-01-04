@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <exception>
+
 #include "MatrixNEW.h"
 using namespace std;
 
@@ -130,12 +132,4 @@ ostream& operator<<( ostream &output, const MatrixNEW &M ) {
   }
   output << endl;
   return output;
-}
-
-double& MatrixNEW::operator()(const int i, const int j) const {
-	return Mat[i+j*m_];
-}
-
-double* MatrixNEW::getMatrix(){
-	return Mat;
 }

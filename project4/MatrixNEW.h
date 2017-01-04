@@ -31,8 +31,18 @@ public:
 	MatrixNEW& operator*=(const MatrixNEW& M);
 
 	friend ostream& operator<<(ostream& stream, const MatrixNEW& matrix);
-	double& operator()(const int i, const int j) const;
-	double* getMatrix();
+
+	inline double& operator()(const int i, const int j) const {
+		if (i < 0 || i >= m_ || j < 0 || j >= n_) {
+			cout << "Error: MatrixNew index out of bounds" << endl; // print error message
+			throw std::exception();
+		}
+		return Mat[i+j*m_];
+	}	
+
+	inline double* getMatrix(){
+		return Mat;
+	}
 
 };
 

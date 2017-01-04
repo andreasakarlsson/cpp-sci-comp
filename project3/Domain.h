@@ -47,23 +47,42 @@ class Domain {
 
   void save2file(const char* fname = "outfile.bin");
 
-  int xsize();
-  int ysize();
-  bool grid_valid();
+  // Get size of grid
+  inline int xsize(){ return n_; }
+  inline int ysize(){ return m_; }
 
-  double x(int i);
-  double y(int i);
+  inline bool grid_valid() { return m_ != 0; }
 
-  double* xvector();
-  double* yvector();
+  // access to x values
+  inline double x(int i){
+      if (i < 0 || i > n_) {
+          std::cout << "Error: Gird index out of bounds" << std::endl; // print error message
+          throw std::exception();
+      }
+      return x_[0+i*(m_+1)];
+  }
+
+  // access to y values
+  inline double y(int j){
+      if (j < 0 || j > m_) {
+        std::cout << "Error: Gird index out of bounds" << std::endl; // print error message
+        throw std::exception();
+      }
+      return y_[j+0*(m_+1)];
+  }
+
+  // access to x_ and y_ arrays
+  inline double* xvector(){ return x_; }
+  inline double* yvector(){ return y_; }
+
 
   private:
   
   std::shared_ptr<Curvebase> sides[4];
   //Curvebase* sides[4];
 
-  inline double phi1(double w);
-  inline double phi2(double w);
+  inline double phi1(double w){ return 1.0 - w; }
+  inline double phi2(double w){ return w; }
   
   double *x_,*y_;
 
