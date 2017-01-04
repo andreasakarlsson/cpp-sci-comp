@@ -69,11 +69,11 @@ algeb = dxxu;  %  choose dxu for 1st deriv and dxxu for 2nd
 
 hold on
 yyaxis left
-plot(x0,squeeze(A(end-5,:)),'g','linewidth',2)
+plot(x0,squeeze(A(end-5,:)),'g','linewidth',4)
 plot(x0,algeb,'r','linewidth',2)
 ax = gca;
 ax.YColor = [1.0 0.0 0.0];
-%axis([-10.5 5.5 -0.04 0.023])
+axis([-10.3 5.3 -0.04 0.023]) % for dxxu
 %xlim([-10.5 5.5])
   % Choose ylabel depending on 1st or 2nd deriv
 %ylabel('$\frac{\partial}{ \partial x} u(x,y)$','Interpreter','latex','FontSize',14)
@@ -85,15 +85,16 @@ ern = (algeb+squeeze(A(end-1,:)));
 plot(x0,abs( erd ),'b','linewidth',2);
 ax = gca;
 ax.YColor = [0.0 0.0 1.0];
-%ylim([-0.1e-4 4.5e-4])
+%ylim([-0.1e-4 2.5e-4])% for dxu
+ylim([-0.1e-4 5e-4]) % for dxxu
 ylabel('error','FontSize',14)
 
 
 
-% set(figID,'Units','centimeters');
-% pos = get(figID,'Position');
-% set(figID,'PaperPositionMode','Auto','PaperUnits','centimeters',...
-%     'PaperSize',[pos(3), pos(4)])
-% 
-% print(figID,'comparison-xx','-dpdf')
-% close(figID)
+set(figID,'Units','centimeters');
+pos = get(figID,'Position');
+set(figID,'PaperPositionMode','Auto','PaperUnits','centimeters',...
+    'PaperSize',[pos(3), pos(4)])
+
+print(figID,'comparison-xx','-dpdf')
+close(figID)
