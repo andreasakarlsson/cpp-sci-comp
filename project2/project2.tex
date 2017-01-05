@@ -10,6 +10,8 @@
 \usepackage{listings}
 \usepackage{makecell}
 \usepackage[table]{xcolor}
+\usepackage{filecontents}
+\usepackage{natbib}
 \lstset{deletestring=[b]{"}}
 
 \usepackage{fancyhdr} % Custom headers and footers
@@ -25,6 +27,42 @@
   \and Andreas Karlsson \\ mail \href{mailto:andreas.a.karlsson@ki.se}{andreas.a.karlsson@ki.se} }
 \date{\normalsize\today} % Today's date or a custom date
 
+\begin{filecontents}{mini.bib}
+  @Article{Moler:2003:NDW,
+  author =       "Cleve Moler and Charles {Van Loan}",
+  title =        "Nineteen Dubious Ways to Compute the Exponential of a
+                 Matrix, Twenty-Five Years Later",
+  journal =      j-SIAM-REVIEW,
+  volume =       "45",
+  number =       "1",
+  pages =        "3--49",
+  month =        mar,
+  year =         "2003",
+  CODEN =        "SIREAD",
+  DOI =          "http://dx.doi.org/10.1137/S00361445024180",
+  ISSN =         "0036-1445 (print), 1095-7200 (electronic)",
+  ISSN-L =       "0036-1445",
+  MRclass =      "15A15 (65F15 65F30 65L99)",
+  MRnumber =     "MR1981253 (2004d:15012)",
+  MRreviewer =   "David Scott Watkins",
+  bibdate =      "Sat Mar 29 09:56:39 MDT 2014",
+  bibsource =    "http://epubs.siam.org/toc/siread/45/1;
+                 http://www.math.utah.edu/pub/bibnet/authors/m/moler-cleve-b.bib;
+                 http://www.math.utah.edu/pub/tex/bib/matlab.bib;
+                 http://www.math.utah.edu/pub/tex/bib/siamreview.bib",
+  URL =          "http://epubs.siam.org/sam-bin/dbq/article/41801",
+  acknowledgement = ack-nhfb,
+  articleno =    "PII S0036144502418010",
+  fjournal =     "SIAM Review",
+  journal-URL =  "http://epubs.siam.org/sirev",
+  keywords =     "condition; Krylov iteration; Matlab; matrix
+                 exponential; matrix logarithm; roundoff error;
+                 truncation error",
+  onlinedate =   "January 2003",
+}
+\end{filecontents}
+
+
 \begin{document}
 
 \maketitle % Print the title
@@ -35,9 +73,9 @@
 
 The exponential for real number is based on a simple Taylor expansion
 and the implementation uses Horner's scheme to improve the
-performance.  To estimate the error a for-loop calculate each term in
-the Taylor expansion. If term $n$ is smaller than the error the sum of
-consecutive terms is smaller than the term $n$ and thus the
+performance.  To estimate the error, a for-loop calculate each of the
+terms in the Taylor expansion. If term $n$ is smaller than the error
+the sum of consecutive terms is smaller than the term $n$ and thus the
 error. Horner's scheme then uses $n$-terms for the approximation.
 
 \small{
@@ -64,7 +102,12 @@ exceeds the set tolerance. This is because the type \texttt{double}
 cannot store data with high enough precision. A \texttt{double} can
 store about 15 digits. If the desired error should be $10^{-10}$ then
 the largest value that can be stored with this precision is
-$\sim 10^{5}$. There are libraries that can handle numbers with higher precision, e.g. boost or GMP, and thus circumvent this problem.
+$\sim 10^{5}$. Using libraries that can handle numbers with higher
+precision, e.g. boost or GMP, might increase the accuracy of our
+current implementation. To further improve the accuracy we could also
+investigate the use of one of the other four classes of methods for
+calculating the exponential of a matrix described by
+\citet{Moler:2003:NDW}.
 
 
 \subsection{Task 2 - construct a matrix class.}
@@ -121,7 +164,7 @@ as $E_{\text{matlab}}^{\text{low}}$.
   \end{bmatrix}
 \]
 
-We than compared the two functions by calculating the difference which
+We then compared the two functions by calculating the difference which
 is displayed as $E_{\text{difference}}^{\text{low}}$.
 
 
@@ -135,9 +178,9 @@ is displayed as $E_{\text{difference}}^{\text{low}}$.
   \end{bmatrix}
 \]
 
-We then wanted to test our function \texttt{matrixExp} on a matrix
-containing higher values. We therefore created a \texttt{Matrix} class
-objects with higher values called $M_{\text{input}}^{\text{high}}$.
+To investigate how well our function \texttt{matrixExp} could handle
+larger values we then created a \texttt{Matrix} class objects called
+$M_{\text{input}}^{\text{high}}$ with higher values.
 
 \[
 M_{\text{input}}^{\text{high}}=
@@ -176,7 +219,7 @@ E_{\text{matlab}}^{\text{high}} = \mathtt{r8mat\_{expm1}(4, mArray)} =
   \end{bmatrix}
 \]
 
-We than compared the two functions by calculating the difference which
+We then compared the two functions by calculating the difference which
 is displayed as $E_{\text{difference}}^{\text{high}}$.
 
 
@@ -194,5 +237,8 @@ Just as for Section~\ref{subsec:task1} this works well for matrices
 with small elements but not for large elements since the result is so
 large that the type \texttt{double} cannot contain the values with
 enough precision.
+
+\bibliographystyle{plainnat}
+\bibliography{mini}
 
 \end{document}
