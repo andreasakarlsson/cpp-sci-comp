@@ -71,8 +71,8 @@
 \subsection{Task 1 - implement the evaluation of the exponential for real numbers.}
 \label{subsec:task1}
 
-The exponential for real number is based on a simple Taylor expansion
-and the implementation uses Horner's scheme to improve the
+The exponential for real numbers are based on a simple Taylor
+expansion and the implementation uses Horner's scheme to improve the
 performance.  To estimate the error, a for-loop calculate each of the
 terms in the Taylor expansion. If term $n$ is smaller than the error
 the sum of consecutive terms is smaller than the term $n$ and thus the
@@ -150,7 +150,7 @@ exponential of the matrix $E_{\text{our}}^{\text{low}}$.
   \end{bmatrix}
 \]
 
-We also calculated the exponential of the matrix using Matlabs
+We also calculated the exponential of the matrix using Matlab's
 \texttt{r8mat\_{expm1}} function, which produces the matrix displayed
 as $E_{\text{matlab}}^{\text{low}}$.
 
@@ -164,8 +164,9 @@ as $E_{\text{matlab}}^{\text{low}}$.
   \end{bmatrix}
 \]
 
-We then compared the two functions by calculating the difference which
-is displayed as $E_{\text{difference}}^{\text{low}}$.
+The two methods produced very similar results as can be concluded from
+the calculated difference which is displayed as
+$E_{\text{difference}}^{\text{low}}$.
 
 
 \[
@@ -205,7 +206,7 @@ E_{\text{our}}^{\text{high}} = \mathtt{matrixExp}(M_{\text{input}}^{\text{high}}
   \end{bmatrix}
 \]
 
-We also calculated the exponential of the matrix using Matlabs
+We also calculated the exponential of the matrix using Matlab's
 \texttt{r8mat\_{expm1}} function, which produces the matrix displayed
 as $E_{\text{matlab}}^{\text{high}}$.
 
@@ -233,10 +234,13 @@ is displayed as $E_{\text{difference}}^{\text{high}}$.
 \end{bmatrix}
 \]
 
-Just as for Section~\ref{subsec:task1} this works well for matrices
-with small elements but not for large elements since the result is so
-large that the type \texttt{double} cannot contain the values with
-enough precision.
+In analog to Section~\ref{subsec:task1} our \texttt{matrixExp}
+function performed well for matrices containing elements with low
+values and as we increased the values of the matrix elements we lose
+precision. This resulted in the observed difference between our
+implementation and MatLab's \texttt{r8mat\_{expm1}}
+function. Potential remedies for this were discussed in
+Section~\ref{subsec:task1}.
 
 \bibliographystyle{plainnat}
 \bibliography{mini}
