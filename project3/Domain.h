@@ -7,7 +7,6 @@
 class Domain {
 
  public:
-  // Domain();
   Domain(std::shared_ptr<Curvebase> s1, std::shared_ptr<Curvebase> s2, std::shared_ptr<Curvebase> s3, std::shared_ptr<Curvebase> s4);
   virtual ~Domain();
   bool check_consistency(double epsilon = 1e-3);
