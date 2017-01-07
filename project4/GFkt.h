@@ -12,9 +12,6 @@ class GFkt{
 private:
 
 	MatrixNEW u;
-	MatrixNEW ux;
-	MatrixNEW uy;
-	MatrixNEW L;
 	std::shared_ptr<Domain> grid;
 
 
@@ -30,10 +27,12 @@ public:
 	GFkt operator*(double d) const;
 	void setfunction(double (*fp)(double,double));
 	void save2file(const char* fname);
-	void Dx(const char* fname);
-	void Dy(const char* fname);
-	void Laplacian(const char* fname);
+	GFkt Dx();
+	GFkt Dy();
+	GFkt Laplacian(GFkt ux_, GFkt uy_);
 
 };
+
+	GFkt operator*(double d, GFkt& G);
 
 #endif

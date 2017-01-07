@@ -16,15 +16,12 @@
 using namespace std;
 
 
-GFkt::GFkt(shared_ptr<Domain> grid_) : u(grid_->xsize()+1,grid_->ysize()+1,0.0), 
-	ux(grid_->xsize()+1,grid_->ysize()+1,0.0), 
-	uy(grid_->xsize()+1,grid_->ysize()+1,0.0),
-	L(grid_->xsize()+1,grid_->ysize()+1,0.0), grid(grid_) {}
+GFkt::GFkt(shared_ptr<Domain> grid_) : u(grid_->xsize()+1,grid_->ysize()+1,0.0), grid(grid_) {}
 
-// copy constructor
-GFkt::GFkt(const GFkt& U) : u(U.u), ux(U.ux), uy(U.uy), L(U.L), grid(U.grid) {}
+// copy-constructor
+GFkt::GFkt(const GFkt& U) : u(U.u), grid(U.grid) {}
 
-// copy assignment constructor
+// copy-assignment constructor
 GFkt& GFkt::operator=(const GFkt& U) {
 	return *this;
 }
@@ -36,8 +33,10 @@ GFkt GFkt::operator+(const GFkt& U) const {
 		tmp.u = u + U.u; 
 		return tmp;
 	}
-	else cout << "error" << endl; // give error somehow
-	throw std::exception();
+	else {
+		cout << "error" << endl; // give error somehow
+		throw std::exception();
+	}
 }
 
 // Subtraction
@@ -47,8 +46,10 @@ GFkt GFkt::operator-(const GFkt& U) const {
 		tmp.u = u - U.u; 
 		return tmp;
 	}
-	else cout << "error: not same grid" << endl; // give error somehow
-	throw std::exception();
+	else {
+		cout << "error: not same grid" << endl; // give error somehow
+		throw std::exception();
+	}
 }
 
 // Pointwise multiplication
@@ -60,11 +61,13 @@ GFkt GFkt::operator*(const GFkt& U) const {
 				tmp.u(i,j) = u(i,j)*U.u(i,j);
 		return tmp;
 	}
-	else cout << "error: not same grid" << endl; // give error somehow
-	throw std::exception();
+	else {
+		cout << "error: not same grid" << endl; // give error somehow
+		throw std::exception();
+	}
 }
 
-// Multiplication by scalar
+// Multiplication by scalar from right
 GFkt GFkt::operator*(double d) const {
 	GFkt tmp(grid);
 	for (int j = 0; j <= grid->ysize(); j++)
@@ -73,7 +76,12 @@ GFkt GFkt::operator*(double d) const {
 	return tmp;
 }
 
-// Sets the MatrixNEW with a function fp
+// Multiplication by scalar from left
+GFkt operator*(double d, GFkt& G){
+	return G*d;
+}
+
+// Sets the MatrixNEW u with a function fp
 void GFkt::setfunction(double (*fp)(double,double)){
 	int n_ = grid->xsize(); int m_ = grid->ysize(); 
 	double* x_ = grid->xvector();	// get real x & y values
@@ -84,7 +92,7 @@ void GFkt::setfunction(double (*fp)(double,double)){
 			u(i,j) = fp(x_[j+i*(m_+1)], y_[j+i*(m_+1)]);
 }
 
-// Saves MatrixNEW to binary file
+// Saves MatrixNew u (i.e. function values) to a binary file.
 void GFkt::save2file(const char* fname){
 		FILE *fil;
 		fil = fopen(fname,"wb");
@@ -93,18 +101,17 @@ void GFkt::save2file(const char* fname){
 }
 
 // D0x Partial derivative
-void GFkt::Dx(const char* fname){
-	//ux = MatrixNEW(grid_->xsize()+1,grid_->ysize()+1,0.0); 
+GFkt GFkt::Dx(){
 	int n_ = grid->xsize(); int m_ = grid->ysize(); 
-	//MatrixNEW Dx(n_+1,m_+1,0.0);  // size 50 x 20
+	MatrixNEW ux(n_+1,m_+1,0.0);
 	double* x_ = grid->xvector();
-	for(int i=1; i<=n_-1; i++){   // from i=1 to i=48 i.e. borders = 0.0
-		for(int j=0; j<=m_; j++){ // from j=0 to i=49 i.e. also borders
+	for(int i=1; i<=n_-1; i++){   // from i=1 to i=n_-1 i.e. borders = 0.0
+		for(int j=0; j<=m_; j++){ // from j=0 to i=m_ i.e. also borders
 			ux(i,j) = (u(i+1,j) - u(i-1,j))/(x_[j+(i+1)*(m_+1)]-x_[j+(i-1)*(m_+1)]); 
 		}
 	}
 
-	// NEW one-sided expression
+	// One-sided expression for borders
 	for(int j=0; j<=m_; j++){  
 		double h1 = x_[j+(1)*(m_+1)] - x_[j+(0)*(m_+1)];
 		double h2 = x_[j+(2)*(m_+1)] - x_[j+(0)*(m_+1)];
@@ -114,25 +121,24 @@ void GFkt::Dx(const char* fname){
 		double hn2 = x_[j+(n_)*(m_+1)] - x_[j+(n_-2)*(m_+1)];
 		ux(n_,j) = (-u(n_,j)*(hn2*hn2-hn1*hn1) + hn2*hn2*u(n_-1,j) - hn1*hn1*u(n_-2,j))/(hn1*hn2*(hn1-hn2));
 	}
-	FILE *fil;
-	fil = fopen(fname,"wb");
-	fwrite(ux.getMatrix(),sizeof(double),(n_+1)*(m_+1),fil);
-	fclose(fil);
+
+	GFkt tmp(grid);
+	tmp.u = ux;
+	return tmp;
 }
 
 // D0y Partial derivative
-void GFkt::Dy(const char* fname){
-	//uy = MatrixNEW(grid_->xsize()+1,grid_->ysize()+1,0.0); 
+GFkt GFkt::Dy(){
 	int n_ = grid->xsize(); int m_ = grid->ysize();
-	//MatrixNEW Dy(n_+1,m_+1,0.0);  // size 50 x 20
+	MatrixNEW uy(n_+1,m_+1,0.0);
 	double* y_ = grid->yvector();
-	for(int i=0; i<=n_; i++){   // from i=0 to i=49 i.e. also borders
-		for(int j=1; j<=m_-1; j++){ // from i=1 to i=48 i.e. borders = 0.0
+	for(int i=0; i<=n_; i++){   // from i=0 to i=n_ i.e. also borders
+		for(int j=1; j<=m_-1; j++){ // from i=1 to i=m_-1 i.e. borders = 0.0
 			uy(i,j) = (u(i,j+1) - u(i,j-1))/(y_[(j+1)+i*(m_+1)]-y_[(j-1)+i*(m_+1)]);
 		}
 	}
 
-	// NEW one-sided expression
+	// One-sided expression for borders
 	for(int i=0; i<=n_; i++){  
 	double h1 = y_[1+i*(m_+1)] - y_[0+i*(m_+1)];
 	double h2 = y_[2+i*(m_+1)] - y_[0+i*(m_+1)];
@@ -144,43 +150,54 @@ void GFkt::Dy(const char* fname){
 	}
 
 
-	FILE *fil;
-	fil = fopen(fname,"wb");
-	fwrite(uy.getMatrix(),sizeof(double),(n_+1)*(m_+1),fil);
-	fclose(fil);
+	GFkt tmp(grid);
+	tmp.u = uy;
+	return tmp;
 }
+    
+GFkt GFkt::Laplacian(GFkt ux_, GFkt uy_){
+	MatrixNEW ux = ux_.u;
+	MatrixNEW uy = uy_.u;
 
-// Laplacian    
-void GFkt::Laplacian(const char* fname){
 	int n_ = grid->xsize(); int m_ = grid->ysize();
-	MatrixNEW uxx(n_+1,m_+1,0.0);  // size 50 x 20
-	MatrixNEW uyy(n_+1,m_+1,0.0);  // size 50 x 20
+	MatrixNEW uxx(n_+1,m_+1,0.0);  
+	MatrixNEW uyy(n_+1,m_+1,0.0);
 	double* x_ = grid->xvector();
 	double* y_ = grid->yvector();   
 
-	for(int i=1; i<=n_-1; i++){   // from i=2 to i=48 i.e. borders = 0.0
-		for(int j=0; j<=m_; j++){ 	// no borders.
-			//L(i,j) = (-4*u(i,j) + u(i+1,j) + u(i-1,j) + u(i,j+1) + u(i,j-1)); // just to try.
+	for(int i=1; i<=n_-1; i++){   // from i=1 to i=n_-1 i.e. borders = 0.0
+		for(int j=0; j<=m_; j++){ // no borders.
 			uxx(i,j) = (ux(i+1,j)-ux(i-1,j))/(x_[j+(i+1)*(m_+1)]-x_[j+(i-1)*(m_+1)]);
 		}
 	}
-	for(int i=0; i<=n_; i++){   // from i=0 to i=49 i.e. also borders
-		for(int j=1; j<=m_-1; j++){ // from j=1 to j=48 i.e. border = 0.0
+	for(int i=0; i<=n_; i++){   // from i=0 to i=n_ i.e. also borders
+		for(int j=1; j<=m_-1; j++){ // from j=1 to j=m_-1 i.e. border = 0.0
 			uyy(i,j) = (uy(i,j+1)-uy(i,j-1))/(y_[(j+1)+i*(m_+1)]-y_[(j-1)+i*(m_+1)]);
 		}
 	}
 
+
+	// One-sided expressions for borders (4-stencil)
+
+		double u0;
+		double u1;
+		double u2;
+		double u3;
+		double h1;
+		double h2;
+		double h3;
+
+
 	for(int j=0; j<=m_; j++){   // one sided expression supposed to fix first and last column (for uxx).
 
-		// (4-stencil)
 		int i = 0;
-		double u0 = u(i+0,j);
-		double u1 = u(i+1,j);
-		double u2 = u(i+2,j);
-		double u3 = u(i+3,j);
-		double h1 = x_[j+(1)*(m_+1)] - x_[j+(0)*(m_+1)];
-		double h2 = x_[j+(2)*(m_+1)] - x_[j+(0)*(m_+1)];
-		double h3 = x_[j+(3)*(m_+1)] - x_[j+(0)*(m_+1)];
+		u0 = u(i+0,j);
+		u1 = u(i+1,j);
+		u2 = u(i+2,j);
+		u3 = u(i+3,j);
+		h1 = x_[j+(1)*(m_+1)] - x_[j+(0)*(m_+1)];
+		h2 = x_[j+(2)*(m_+1)] - x_[j+(0)*(m_+1)];
+		h3 = x_[j+(3)*(m_+1)] - x_[j+(0)*(m_+1)];
 
 		uxx(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
 		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
@@ -204,13 +221,13 @@ void GFkt::Laplacian(const char* fname){
 	for(int i=0; i<=n_; i++){   // one sided expression supposed to fix first and last row (for uyy).
 
 		int j = 0;
-		double u0 = u(i,j+0);
-		double u1 = u(i,j+1);
-		double u2 = u(i,j+2);
-		double u3 = u(i,j+3);
-		double h1 = y_[1+i*(m_+1)] - y_[0+i*(m_+1)];
-		double h2 = y_[2+i*(m_+1)] - y_[0+i*(m_+1)];
-		double h3 = y_[3+i*(m_+1)] - y_[0+i*(m_+1)];
+		u0 = u(i,j+0);
+		u1 = u(i,j+1);
+		u2 = u(i,j+2);
+		u3 = u(i,j+3);
+		h1 = y_[1+i*(m_+1)] - y_[0+i*(m_+1)];
+		h2 = y_[2+i*(m_+1)] - y_[0+i*(m_+1)];
+		h3 = y_[3+i*(m_+1)] - y_[0+i*(m_+1)];
 
 		uyy(i,j) = 2*(-u0*((h3*h3*h3 -h1*h1*h1)*(h2*h3*h3*h3 - h3*h2*h2*h2)-(h3*h3*h3 - h2*h2*h2)*(h1*h3*h3*h3 - h3*h1*h1*h1)) 
 		+ (h2*h3*h3*h3 - h3*h2*h2*h2)*(h3*h3*h3*u1 - h1*h1*h1*u3) - (h1*h3*h3*h3 - h3*h1*h1*h1)*(h3*h3*h3*u2 - h2*h2*h2*u3) )
@@ -231,10 +248,7 @@ void GFkt::Laplacian(const char* fname){
 
 	}
 
-	L = uxx + uyy;
-
-	FILE *fil;
-	fil = fopen(fname,"wb");
-	fwrite(L.getMatrix(),sizeof(double),(n_+1)*(m_+1),fil);
-	fclose(fil);
+	GFkt tmp(grid);
+	tmp.u = uxx + uyy; // Laplacian 
+	return tmp;
 }
