@@ -46,4 +46,6 @@ public:
 
 };
 
+	MatrixNEW operator*(const double& d, const MatrixNEW& M);
+
 #endif

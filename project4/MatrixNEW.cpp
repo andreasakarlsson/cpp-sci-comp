@@ -1,4 +1,3 @@
-#include <vector>
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
@@ -85,7 +84,7 @@ MatrixNEW MatrixNEW::operator*(const MatrixNEW& M) const {
  	return tempM;
 }
 
-//  Multiplication with scalar (from right side)
+//  Multiplication with scalar from right side
 MatrixNEW MatrixNEW::operator*(const double& d) const {
 	MatrixNEW tempM(m_, n_);
 	for(int i = 0; i < m_*n_; i++){
@@ -93,6 +92,13 @@ MatrixNEW MatrixNEW::operator*(const double& d) const {
 	}
  	return tempM;
 }
+
+//  Multiplication with scalar from left side 
+//  Tthis method is not part of th class
+MatrixNEW operator*(const double& d, const MatrixNEW& M){
+ 	return M*d;
+}
+
 
 MatrixNEW MatrixNEW::operator/(const double& d) const {
 	MatrixNEW tempM(m_, n_);
